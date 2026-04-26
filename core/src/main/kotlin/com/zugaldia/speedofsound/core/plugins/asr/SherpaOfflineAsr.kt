@@ -108,6 +108,16 @@ abstract class SherpaOfflineAsr<Options : AsrPluginOptions>(
         log.info("Recognizer created: ${model.id}/${recognizerLanguage?.iso2}")
     }
 
+    /**
+     * Builds an [OfflineRecognizer] from the given [modelConfigBuilder], tokens path, and
+     * compute provider. Reads [currentOptions].enableDebug from instance state.
+     *
+     * Safe to call multiple times on the same [modelConfigBuilder] instance: Sherpa's
+     * `OfflineModelConfig.Builder.build()` and `OfflineRecognizerConfig.Builder.build()` only
+     * read the builder state — they do not consume or mutate it — so the CPU-fallback path's
+     * second invocation is hazard-free. (Verified by bytecode inspection of
+     * sherpa-onnx-v1.12.33.jar.)
+     */
     private fun buildRecognizer(
         modelConfigBuilder: OfflineModelConfig.Builder,
         tokens: String,
