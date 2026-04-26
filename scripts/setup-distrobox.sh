@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 # Stand up a Fedora 43 distrobox with Java 25 + GTK4 + libadwaita + GStreamer
-# for building and running Sound Of Stream on bazzite (immutable host).
+# for building and running VoiceStream on bazzite (immutable host).
 #
 # Run on the HOST (not inside any container):
 #   bash scripts/setup-distrobox.sh
 # Then enter with:
-#   distrobox enter sos-dev
+#   distrobox enter voicestream-dev
 set -euo pipefail
 
-NAME="sos-dev"
+NAME="voicestream-dev"
 IMAGE="registry.fedoraproject.org/fedora:43"
 
 if ! command -v distrobox >/dev/null 2>&1; then
