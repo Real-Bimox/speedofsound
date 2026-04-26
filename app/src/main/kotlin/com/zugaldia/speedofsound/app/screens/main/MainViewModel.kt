@@ -160,6 +160,7 @@ class MainViewModel(
                 GLib.idleAdd(GLib.PRIORITY_DEFAULT) {
                     when (event) {
                         is RecorderEvent.RecordingLevel -> state.updateRecordingLevel(event.level)
+                        is RecorderEvent.SpeechStarted, is RecorderEvent.SpeechEnded -> Unit
                     }
                     false // Return false for one-shot execution
                 }

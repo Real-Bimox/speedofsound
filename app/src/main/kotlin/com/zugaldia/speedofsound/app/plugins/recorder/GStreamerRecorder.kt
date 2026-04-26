@@ -4,6 +4,7 @@ import com.zugaldia.speedofsound.app.ENV_DISABLE_GSTREAMER
 import com.zugaldia.speedofsound.core.FatalStartupException
 import com.zugaldia.speedofsound.core.audio.AudioInputDevice
 import com.zugaldia.speedofsound.core.audio.AudioManager
+import com.zugaldia.speedofsound.core.plugins.recorder.JvmRecorder
 import com.zugaldia.speedofsound.core.plugins.recorder.RecorderEvent
 import com.zugaldia.speedofsound.core.plugins.recorder.RecorderOptions
 import com.zugaldia.speedofsound.core.plugins.recorder.RecorderPlugin
@@ -258,6 +259,11 @@ class GStreamerRecorder(
                     val level = AudioManager.computeRmsLevel(data)
                     tryEmitEvent(RecorderEvent.RecordingLevel(level))
                 }
+                val vad = currentOptions.vadEngine
+                if (vad != null) {
+                    val shorts = JvmRecorder.decodePcm16LittleEndian(data, data.size)
+                    vad.acceptPcm16(shorts)
+                }
             }
         } finally {
             buffer.unmap(mapInfo)
@@ -318,6 +324,8 @@ class GStreamerRecorder(
             }
         }
         cleanup()
+        runCatching { currentOptions.vadEngine?.release() }
+            .onFailure { log.warn("VAD release failed in disable: ${it.message}") }
         super.disable()
     }
 }
