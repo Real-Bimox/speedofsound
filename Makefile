@@ -1,4 +1,4 @@
-APP_ID = io.speedofsound.SpeedOfSound
+APP_ID = io.voicestream.VoiceStream
 export GRADLE_OPTS = --enable-native-access=ALL-UNNAMED
 
 .PHONY: clean run run-light run-dark build shadow-build shadow-run check resources \
@@ -28,13 +28,13 @@ shadow-build: clean
 	./gradlew :app:shadowJar
 
 shadow-run: shadow-build
-	java --enable-native-access=ALL-UNNAMED -jar app/build/libs/speedofsound.jar
+	java --enable-native-access=ALL-UNNAMED -jar app/build/libs/voicestream.jar
 
 check:
 	./gradlew check
 
 resources:
-	rm -f app/src/main/resources/speedofsound.gresource
+	rm -f app/src/main/resources/voicestream.gresource
 	./gradlew :app:compileResources
 
 #
@@ -78,8 +78,8 @@ flatpak-build:
 	flatpak-builder --force-clean --user --install-deps-from=flathub --repo=repo --install builddir $(APP_ID).yml
 
 flatpak-bundle:
-	rm -f speedofsound.flatpak
-	flatpak build-bundle repo speedofsound.flatpak $(APP_ID) --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
+	rm -f voicestream.flatpak
+	flatpak build-bundle repo voicestream.flatpak $(APP_ID) --runtime-repo=https://flathub.org/repo/flathub.flatpakrepo
 
 flatpak-run:
 	flatpak run $(APP_ID)
@@ -98,19 +98,19 @@ snapcraft-clean:
 	snapcraft clean
 
 snapcraft-pack:
-	rm -f speedofsound_*.snap
+	rm -f voicestream_*.snap
 	snapcraft pack
 
 snapcraft-lint:
-	snapcraft lint speedofsound_*.snap
+	snapcraft lint voicestream_*.snap
 
 snap-install:
-	snap install speedofsound_*_amd64.snap --dangerous
-	snap connect speedofsound:audio-record
-	snap connect speedofsound:alsa
+	snap install voicestream_*_amd64.snap --dangerous
+	snap connect voicestream:audio-record
+	snap connect voicestream:alsa
 
 snap-remove:
-	snap remove speedofsound
+	snap remove voicestream
 
 #
 # GitHub Actions

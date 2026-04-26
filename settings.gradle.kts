@@ -21,4 +21,4 @@ include(":app")
 include(":cli")
 include(":core")
 
-rootProject.name = "speedofsound"
+rootProject.name = "voicestream"

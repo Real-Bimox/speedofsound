@@ -2,7 +2,7 @@
 <!--
     This resource file must be regenerated and committed every time icons are
     added or removed. After modifying the icons/ directory, rebuild the
-    compiled resource (speedofsound.gresource):
+    compiled resource (voicestream.gresource):
 
         make resources
 

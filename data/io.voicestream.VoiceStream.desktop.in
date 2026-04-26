@@ -1,12 +1,12 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Speed of Sound
+Name=VoiceStream
 Comment=Voice typing for the Linux desktop
 Categories=Utility;Accessibility;
 Keywords=voice;typing;dictation;transcription;speech;microphone;whisper;
-Icon=io.speedofsound.SpeedOfSound
-Exec=speedofsound
+Icon=io.voicestream.VoiceStream
+Exec=voicestream
 Terminal=false
 StartupNotify=true
 DBusActivatable=true

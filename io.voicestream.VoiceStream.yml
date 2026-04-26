@@ -1,4 +1,4 @@
-id: io.speedofsound.SpeedOfSound
+id: io.voicestream.VoiceStream
 runtime: org.gnome.Platform
 runtime-version: '50'
 
@@ -6,7 +6,7 @@ sdk: org.gnome.Sdk
 sdk-extensions:
   - org.freedesktop.Sdk.Extension.openjdk25
 
-command: speedofsound
+command: voicestream
 
 finish-args:
   - --device=dri             # OpenGL rendering
@@ -24,7 +24,7 @@ modules:
     build-commands:
       - /usr/lib/sdk/openjdk25/install.sh
 
-  - name: speedofsound
+  - name: voicestream
     buildsystem: meson
     build-options:
       append-path: "/usr/lib/sdk/openjdk25/gradle/bin:/usr/lib/sdk/openjdk25/jvm/openjdk-25/bin"
@@ -32,7 +32,7 @@ modules:
       - type: dir # During development
         path: .
 #      - type: git # For actual releases
-#        url: https://github.com/zugaldia/speedofsound.git
+#        url: https://github.com/zugaldia/voicestream.git
 #        tag: v0.x.0
 #        commit: HASH # Use: git rev-list -n 1 v0.x.0
 #        disable-lfs: false # (false is the default, making it explicit to ensure we bundle the Whisper model files)

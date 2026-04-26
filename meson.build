@@ -1,4 +1,4 @@
-project('speedofsound',
+project('voicestream',
           version: run_command('cat', 'VERSION', check: true).stdout().strip(),
     meson_version: '>= 1.0.0'
 )
@@ -30,10 +30,10 @@ custom_target('gradle',
   build_always_stale: true,
              install: true,
          install_dir: [ get_option('bindir'), get_option('prefix') / 'lib' ],
-              output: [ app_name, 'speedofsound.jar' ],
+              output: [ app_name, 'voicestream.jar' ],
              command: [ gradle, '-p', gradle_dir ] + gradle_offline_args +
                       [ '-PreleaseVersion=' + meson.project_version(), 'installShadowDist',
                         '&&', 'mv', gradle_install_dir / 'bin' / app_name, '@OUTPUT0@',
-                        '&&', 'mv', gradle_install_dir / 'lib' / 'speedofsound.jar', '@OUTPUT1@'
+                        '&&', 'mv', gradle_install_dir / 'lib' / 'voicestream.jar', '@OUTPUT1@'
                       ]
 )

@@ -11,6 +11,6 @@
 
 gdbus call \
     --session \
-    --dest io.speedofsound.SpeedOfSound \
-    --object-path /io/speedofsound/SpeedOfSound \
+    --dest io.voicestream.VoiceStream \
+    --object-path /io/voicestream/VoiceStream \
     --method org.gtk.Actions.Activate "trigger" [] {}

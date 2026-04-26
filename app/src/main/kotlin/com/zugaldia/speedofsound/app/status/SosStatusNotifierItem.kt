@@ -24,7 +24,7 @@ class SosStatusNotifierItem(
     // Snap does NOT export icons to the host, the extension cannot resolve names that only
     // exist inside the sandbox, resulting in the three-dots fallback. Use a standard FreeDesktop
     // icon instead until we implement IconPixmap (raw pixel data over D-Bus) or manually set
-    // getIconThemePath to /snap/speedofsound/current/usr/share/icons/ (?).
+    // getIconThemePath to /snap/voicestream/current/usr/share/icons/ (?).
     // See: https://github.com/ubuntu/gnome-shell-extension-appindicator/issues/232
     // See: https://github.com/ubuntu/gnome-shell-extension-appindicator/issues/544
     override fun getIconName(): String = when (getRuntimeEnvironment()) {

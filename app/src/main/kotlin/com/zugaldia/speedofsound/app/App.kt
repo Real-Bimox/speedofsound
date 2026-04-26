@@ -80,7 +80,7 @@ class SosApplication(applicationId: String, flags: Set<ApplicationFlags>) : Appl
                 // Keep the app alive without a visible window. GApplication auto-quits
                 // when its use-count drops to zero (no visible windows), hold() prevents
                 // that until the user triggers the global shortcut for the first time.
-                // https://github.com/zugaldia/speedofsound/issues/141
+                // https://github.com/zugaldia/voicestream/issues/141
                 hold()
                 isHoldingForHiddenStart = true
             }

@@ -1,5 +1,5 @@
-name: speedofsound
-adopt-info: speedofsound
+name: voicestream
+adopt-info: voicestream
 summary: Voice typing for the Linux desktop.
 description: |
   Voice typing for the Linux desktop.
@@ -14,12 +14,12 @@ base: core24
 grade: stable
 confinement: strict
 
-title: Speed of Sound
-contact: https://github.com/zugaldia/speedofsound
-donation: https://github.com/zugaldia/speedofsound
-source-code: https://github.com/zugaldia/speedofsound
-website: https://www.speedofsound.io
-issues: https://github.com/zugaldia/speedofsound/issues
+title: VoiceStream
+contact: https://github.com/zugaldia/voicestream
+donation: https://github.com/zugaldia/voicestream
+source-code: https://github.com/zugaldia/voicestream
+website: https://www.voicestream.io
+issues: https://github.com/zugaldia/voicestream/issues
 license: MIT
 
 lint:
@@ -38,7 +38,7 @@ parts:
       - openjdk-25-jre
       - libasound2 # See snap/asound.conf
       - libasound2-plugins
-  speedofsound:
+  voicestream:
     plugin: meson
     source: .
     source-type: local
@@ -50,7 +50,7 @@ parts:
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-25-openjdk-amd64
       - PATH: /usr/lib/jvm/java-25-openjdk-amd64/bin:$PATH
-    parse-info: [ usr/share/metainfo/io.speedofsound.SpeedOfSound.metainfo.xml ]
+    parse-info: [ usr/share/metainfo/io.voicestream.VoiceStream.metainfo.xml ]
   alsa-conf:
     plugin: dump
     source: snap
@@ -59,19 +59,19 @@ parts:
     stage:
       - etc/asound.conf
 slots:
-  speedofsound:
+  voicestream:
     interface: dbus
     bus: session
-    name: io.speedofsound.SpeedOfSound
+    name: io.voicestream.VoiceStream
 
 apps:
-  speedofsound:
+  voicestream:
     extensions: [ gnome ]
-    command: usr/bin/speedofsound
-    common-id: io.speedofsound.SpeedOfSound
-    desktop: usr/share/applications/io.speedofsound.SpeedOfSound.desktop
+    command: usr/bin/voicestream
+    common-id: io.voicestream.VoiceStream
+    desktop: usr/share/applications/io.voicestream.VoiceStream.desktop
     slots:
-      - speedofsound
+      - voicestream
     plugs:
       - network       # Enables network access
       - audio-record   # Allows audio recording (microphone)

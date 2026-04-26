@@ -70,19 +70,19 @@ private fun resolveAppDir(xdgEnvVar: String, fallbackPath: List<String>, snapSub
 
 /**
  * Get the data directory path depending on the environment.
- * Returns $SNAP_USER_COMMON or $XDG_DATA_HOME (if set), falling back to $HOME/.local/share/speedofsound
+ * Returns $SNAP_USER_COMMON or $XDG_DATA_HOME (if set), falling back to $HOME/.local/share/voicestream
  */
 fun getDataDir(): Path = resolveAppDir("XDG_DATA_HOME", listOf(".local", "share"))
 
 /**
  * Get the cache directory path depending on the environment.
- * Returns $SNAP_USER_COMMON/cache or $XDG_CACHE_HOME (if set), falling back to $HOME/.cache/speedofsound
+ * Returns $SNAP_USER_COMMON/cache or $XDG_CACHE_HOME (if set), falling back to $HOME/.cache/voicestream
  */
 fun getCacheDir(): Path = resolveAppDir("XDG_CACHE_HOME", listOf(".cache"), snapSubDir = "cache")
 
 /**
  * Generate a temporary WAV file path with a timestamp.
- * Format: {cacheDir}/speedofsound-{timestamp}.wav
+ * Format: {cacheDir}/voicestream-{timestamp}.wav
  */
 fun generateTmpWavFilePath(): Path {
     val cacheDir = getCacheDir()

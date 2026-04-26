@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="speedofsound">
-  <schema id="io.speedofsound.SpeedOfSound" path="/io/speedofsound/SpeedOfSound/">
+<schemalist gettext-domain="voicestream">
+  <schema id="io.voicestream.VoiceStream" path="/io/voicestream/VoiceStream/">
 
     <key name="portals-restore-token" type="s">
       <default>''</default>

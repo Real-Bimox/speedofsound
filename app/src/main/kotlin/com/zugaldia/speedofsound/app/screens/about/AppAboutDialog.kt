@@ -24,8 +24,8 @@ fun buildAboutDialog(): AboutDialog {
     dialog.developerName = "Antonio Zugaldia"
     dialog.version = "v${BuildConfig.VERSION} (${runtimeEnvironment.label})"
     dialog.website = APPLICATION_URL
-    dialog.issueUrl = "https://github.com/zugaldia/speedofsound/issues"
-    dialog.supportUrl = "https://github.com/zugaldia/speedofsound/issues"
+    dialog.issueUrl = "https://github.com/zugaldia/voicestream/issues"
+    dialog.supportUrl = "https://github.com/zugaldia/voicestream/issues"
     dialog.licenseType = License.MIT_X11
     dialog.copyright = "Copyright (c) 2025-2026 Antonio Zugaldia"
     dialog.debugInfo = buildDebugInfo()

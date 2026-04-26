@@ -1,3 +1,0 @@
-[D-BUS Service]
-Name=io.speedofsound.SpeedOfSound
-Exec=@bindir@/speedofsound --gapplication-service

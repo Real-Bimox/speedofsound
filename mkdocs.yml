@@ -1,8 +1,8 @@
-site_name: Speed of Sound
-site_url: https://speedofsound.io
+site_name: VoiceStream
+site_url: https://voicestream.io
 site_author: Antonio Zugaldia
 site_description: Voice typing for the Linux desktop
-repo_url: https://github.com/zugaldia/speedofsound
+repo_url: https://github.com/zugaldia/voicestream
 theme:
   name: material
   logo: assets/logo-square-512.png

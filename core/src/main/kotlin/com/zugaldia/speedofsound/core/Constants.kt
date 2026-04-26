@@ -1,9 +1,9 @@
 package com.zugaldia.speedofsound.core
 
-const val APPLICATION_NAME = "Speed of Sound"
-const val APPLICATION_ID = "io.speedofsound.SpeedOfSound"
-const val APPLICATION_SHORT = "speedofsound"
-const val APPLICATION_URL = "https://www.speedofsound.io"
+const val APPLICATION_NAME = "VoiceStream"
+const val APPLICATION_ID = "io.voicestream.VoiceStream"
+const val APPLICATION_SHORT = "voicestream"
+const val APPLICATION_URL = "https://www.voicestream.io"
 const val APPLICATION_URL_KEYBOARD_SHORTCUT = "$APPLICATION_URL/keyboard-shortcut/"
 const val APPLICATION_URL_TROUBLESHOOTING = "$APPLICATION_URL/troubleshooting/"
 

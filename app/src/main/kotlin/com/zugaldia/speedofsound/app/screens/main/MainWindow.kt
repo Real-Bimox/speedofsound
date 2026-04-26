@@ -51,7 +51,7 @@ class MainWindow(
     // Track whether we should hide the window on pipeline completion
     // Normally, we should unless we're opening a sub-window (e.g., preferences, or shortcuts)
     // A better way is likely to prevent the pipeline to trigger to start with:
-    // https://github.com/zugaldia/speedofsound/issues/29
+    // https://github.com/zugaldia/voicestream/issues/29
     private var shouldHideOnCompletion = true
 
     init {
@@ -83,7 +83,7 @@ class MainWindow(
 
         content = ToolbarView().apply {
             // Explicitly request minimize and close buttons. Some desktop setups (e.g. Fedora default)
-            // omit the minimize button, which confuses users. Unlike most apps, Speed of Sound must
+            // omit the minimize button, which confuses users. Unlike most apps, VoiceStream must
             // be minimized (or hidden) before the user can type into another application.
             // https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/property.HeaderBar.decoration-layout.html
             addTopBar(HeaderBar().apply { decorationLayout = ":minimize,close"; packEnd(buildMenuButton()) })

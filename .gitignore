@@ -49,10 +49,10 @@ bin/
 ### Flatpak ###
 .flatpak-builder/
 repo/
-speedofsound.flatpak
+voicestream.flatpak
 
 ### Snap ###
-speedofsound_*.snap
+voicestream_*.snap
 
 ### MkDocs ###
 site/

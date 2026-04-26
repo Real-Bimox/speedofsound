@@ -25,7 +25,7 @@ dependencies {
 }
 
 application {
-    applicationName = "speedofsound"
+    applicationName = "voicestream"
     mainClass = "com.zugaldia.speedofsound.app.AppKt"
     applicationDefaultJvmArgs = listOf("--enable-native-access=ALL-UNNAMED") // See: https://java-gi.org/usage/#linux
 }
@@ -36,8 +36,8 @@ val appVersion = project.findProperty("releaseVersion") as String?
     ?: "0.0.0-dev"
 
 // Feature flags from properties
-val disableGioStore = (project.findProperty("speedofsound.disableGioStore") as String?)?.toBoolean() ?: false
-val disableGStreamer = (project.findProperty("speedofsound.disableGStreamer") as String?)?.toBoolean() ?: false
+val disableGioStore = (project.findProperty("voicestream.disableGioStore") as String?)?.toBoolean() ?: false
+val disableGStreamer = (project.findProperty("voicestream.disableGStreamer") as String?)?.toBoolean() ?: false
 
 buildConfig {
     packageName("com.zugaldia.speedofsound.app")
@@ -47,7 +47,7 @@ buildConfig {
 }
 
 tasks.shadowJar {
-    archiveFileName.set("speedofsound.jar")
+    archiveFileName.set("voicestream.jar")
 }
 
 tasks.flatpakGradleGenerator {
@@ -59,7 +59,7 @@ tasks.flatpakGradleGenerator {
 // See: https://java-gi.org/getting-started/getting_started_14/#custom-svg-icons
 tasks.register<Exec>("compileResources") {
     workingDir("src/main/resources")
-    commandLine("glib-compile-resources", "speedofsound.gresource.xml")
+    commandLine("glib-compile-resources", "voicestream.gresource.xml")
 }
 
 //
@@ -73,12 +73,12 @@ val jpackageCommonArgs = listOf(
     "--input", jpackageInputDir.get().asFile.absolutePath,
     "--dest", jpackageOutputDir.get().asFile.absolutePath,
     "--main-class", "com.zugaldia.speedofsound.app.AppKt",
-    "--main-jar", "speedofsound.jar",
+    "--main-jar", "voicestream.jar",
     "--java-options", "--enable-native-access=ALL-UNNAMED",
-    "--name", "speedofsound",
+    "--name", "voicestream",
     "--description", "Voice typing for the Linux desktop",
     "--app-version", appVersion.substringBefore("-"),
-    "--vendor", "Speed of Sound",
+    "--vendor", "VoiceStream",
     "--copyright", "Copyright 2026 Antonio Zugaldia",
     "--icon", rootProject.file("assets/logo/logo-square-512.png").absolutePath,
 )
@@ -86,7 +86,7 @@ val jpackageCommonArgs = listOf(
 // These flags are only valid for installer package types (deb, rpm), not app-image
 val jpackageLinuxInstallerArgs = listOf(
     "--license-file", rootProject.file("LICENSE").absolutePath,
-    "--about-url", "https://www.speedofsound.io",
+    "--about-url", "https://www.voicestream.io",
     "--linux-app-category", "Utility",
     "--linux-menu-group", "Utility",
     "--linux-shortcut",

@@ -8,7 +8,7 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
-APP_DIR="$ROOT_DIR/app/build/jpackage/speedofsound"
+APP_DIR="$ROOT_DIR/app/build/jpackage/voicestream"
 OUTPUT_DIR="$ROOT_DIR/app/build/jpackage"
 VERSION="$(tr -d '[:space:]' < "$ROOT_DIR/VERSION")"
 ARCH="$(uname -m)"
@@ -20,39 +20,39 @@ if [ ! -d "$APP_DIR" ]; then
 fi
 
 # AppRun: symlink to the jpackage native launcher
-ln -sf bin/speedofsound "$APP_DIR/AppRun"
+ln -sf bin/voicestream "$APP_DIR/AppRun"
 
 # Desktop file under usr/share/applications (for appstreamcli and FHS convention),
 # symlinked to the AppDir root (required by the AppImage spec)
 mkdir -p "$APP_DIR/usr/share/applications"
-cat > "$APP_DIR/usr/share/applications/io.speedofsound.SpeedOfSound.desktop" << 'DESKTOP'
+cat > "$APP_DIR/usr/share/applications/io.voicestream.VoiceStream.desktop" << 'DESKTOP'
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=Speed of Sound
+Name=VoiceStream
 Comment=Voice typing for the Linux desktop
 Categories=Utility;Accessibility;
 Keywords=voice;typing;dictation;transcription;speech;microphone;whisper;
-Icon=speedofsound
-Exec=speedofsound
+Icon=voicestream
+Exec=voicestream
 Terminal=false
 StartupNotify=true
 DESKTOP
-ln -sf usr/share/applications/io.speedofsound.SpeedOfSound.desktop \
-    "$APP_DIR/io.speedofsound.SpeedOfSound.desktop"
+ln -sf usr/share/applications/io.voicestream.VoiceStream.desktop \
+    "$APP_DIR/io.voicestream.VoiceStream.desktop"
 
 # Icon at root (appimagetool requires it here, matching Icon= above)
-ln -sf lib/speedofsound.png "$APP_DIR/speedofsound.png"
+ln -sf lib/voicestream.png "$APP_DIR/voicestream.png"
 
 # .DirIcon: required by AppDir spec for thumbnailers and file managers
-ln -sf lib/speedofsound.png "$APP_DIR/.DirIcon"
+ln -sf lib/voicestream.png "$APP_DIR/.DirIcon"
 
 # AppStream metadata
 mkdir -p "$APP_DIR/usr/share/metainfo"
-cp "$ROOT_DIR/data/io.speedofsound.SpeedOfSound.metainfo.xml.in" \
-    "$APP_DIR/usr/share/metainfo/io.speedofsound.SpeedOfSound.appdata.xml"
+cp "$ROOT_DIR/data/io.voicestream.VoiceStream.metainfo.xml.in" \
+    "$APP_DIR/usr/share/metainfo/io.voicestream.VoiceStream.appdata.xml"
 
 # Build the AppImage, APPIMAGE_EXTRACT_AND_RUN=1 avoids a FUSE dependency
-OUTPUT="$OUTPUT_DIR/speedofsound-${VERSION}-${ARCH}.AppImage"
+OUTPUT="$OUTPUT_DIR/voicestream-${VERSION}-${ARCH}.AppImage"
 APPIMAGE_EXTRACT_AND_RUN=1 appimagetool "$APP_DIR" "$OUTPUT"
 echo "AppImage created: $OUTPUT"
