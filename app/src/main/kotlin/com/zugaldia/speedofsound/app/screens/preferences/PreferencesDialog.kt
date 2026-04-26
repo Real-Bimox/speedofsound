@@ -10,8 +10,10 @@ import com.zugaldia.speedofsound.app.screens.preferences.library.ModelLibraryPag
 import com.zugaldia.speedofsound.app.screens.preferences.personalization.PersonalizationPage
 import com.zugaldia.speedofsound.app.screens.preferences.text.TextModelsPage
 import com.zugaldia.speedofsound.app.screens.preferences.voice.VoiceModelsPage
+import com.zugaldia.speedofsound.app.settings.AsrProviderManager
 import com.zugaldia.speedofsound.core.desktop.portals.PortalsClient
 import com.zugaldia.speedofsound.core.desktop.settings.SettingsClient
+import com.zugaldia.speedofsound.core.plugins.AppPluginRegistry
 import org.gnome.adw.Banner
 import org.gnome.adw.Dialog
 import org.gnome.adw.HeaderBar
@@ -24,7 +26,11 @@ import org.slf4j.LoggerFactory
 
 class PreferencesDialog(settingsClient: SettingsClient, portalsClient: PortalsClient) : Dialog() {
     private val logger = LoggerFactory.getLogger(PreferencesDialog::class.java)
-    private val viewModel = PreferencesViewModel(settingsClient, portalsClient)
+    private val viewModel = PreferencesViewModel(
+        settingsClient,
+        portalsClient,
+        AsrProviderManager(AppPluginRegistry(), settingsClient),
+    )
 
     private val operationsBanner: Banner
     private val stack: Stack

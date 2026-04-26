@@ -1,5 +1,6 @@
 package com.zugaldia.speedofsound.app.screens.preferences
 
+import com.zugaldia.speedofsound.app.settings.AsrProviderManager
 import com.zugaldia.speedofsound.core.APPLICATION_URL_KEYBOARD_SHORTCUT
 import com.zugaldia.speedofsound.core.desktop.portals.PortalsClient
 import com.zugaldia.speedofsound.core.plugins.asr.ComputeProvider
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory
 class PreferencesViewModel(
     private val settingsClient: SettingsClient,
     private val portalsClient: PortalsClient,
+    private val asrProviderManager: AsrProviderManager,
 ) {
     private val logger = LoggerFactory.getLogger(PreferencesViewModel::class.java)
     val viewModelScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
@@ -126,6 +128,8 @@ class PreferencesViewModel(
 
     fun getComputeProvider(): ComputeProvider = settingsClient.getComputeProvider()
     fun setComputeProvider(value: ComputeProvider): Boolean = settingsClient.setComputeProvider(value)
+
+    fun isGpuAvailable(): Boolean = asrProviderManager.isGpuAvailable()
 
     /*
      * Advanced page

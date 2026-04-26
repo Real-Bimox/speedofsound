@@ -14,7 +14,6 @@ import com.zugaldia.speedofsound.app.screens.preferences.shared.ActiveProviderCo
 import com.zugaldia.speedofsound.core.desktop.settings.SUPPORTED_LOCAL_ASR_MODELS
 import com.zugaldia.speedofsound.core.desktop.settings.VoiceModelProviderSetting
 import com.zugaldia.speedofsound.core.plugins.asr.ComputeProvider
-import com.zugaldia.speedofsound.core.plugins.asr.SherpaOfflineAsr
 import org.gnome.adw.ActionRow
 import org.gnome.adw.ComboRow
 import org.gnome.adw.PreferencesGroup
@@ -128,7 +127,7 @@ class VoiceModelsPage(private val viewModel: PreferencesViewModel) : Preferences
             }
         }
 
-        val gpuAvailable = !SherpaOfflineAsr.hasFallenBackToCpu()
+        val gpuAvailable = viewModel.isGpuAvailable()
         if (!gpuAvailable) {
             backendComboRow.sensitive = false
             backendComboRow.subtitle = "Requires GPU-enabled Sherpa build"
