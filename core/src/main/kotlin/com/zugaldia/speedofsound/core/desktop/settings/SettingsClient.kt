@@ -349,10 +349,10 @@ class SettingsClient(val settingsStore: SettingsStore) {
      * Voice page (VAD)
      */
 
-    fun isVadEndpointingEnabled(): Boolean =
+    fun getVadEndpointing(): Boolean =
         settingsStore.getBoolean(KEY_VAD_ENDPOINTING, DEFAULT_VAD_ENDPOINTING)
 
-    fun setVadEndpointingEnabled(value: Boolean): Boolean =
+    fun setVadEndpointing(value: Boolean): Boolean =
         settingsStore.setBoolean(KEY_VAD_ENDPOINTING, value).also { success ->
             if (success) _settingsChanged.tryEmit(KEY_VAD_ENDPOINTING)
         }
@@ -365,10 +365,14 @@ class SettingsClient(val settingsStore: SettingsStore) {
             if (success) _settingsChanged.tryEmit(KEY_VAD_MIN_SILENCE_MS)
         }
 
-    fun getComputeProvider(): ComputeProvider =
-        runCatching {
-            ComputeProvider.valueOf(settingsStore.getString(KEY_COMPUTE_PROVIDER, DEFAULT_COMPUTE_PROVIDER.name))
-        }.getOrDefault(DEFAULT_COMPUTE_PROVIDER)
+    fun getComputeProvider(): ComputeProvider {
+        val raw = settingsStore.getString(KEY_COMPUTE_PROVIDER, DEFAULT_COMPUTE_PROVIDER.name)
+        return runCatching { ComputeProvider.valueOf(raw) }
+            .getOrElse { error ->
+                logger.warn("Invalid compute-provider value '$raw', falling back to $DEFAULT_COMPUTE_PROVIDER", error)
+                DEFAULT_COMPUTE_PROVIDER
+            }
+    }
 
     fun setComputeProvider(value: ComputeProvider): Boolean =
         settingsStore.setString(KEY_COMPUTE_PROVIDER, value.name).also { success ->

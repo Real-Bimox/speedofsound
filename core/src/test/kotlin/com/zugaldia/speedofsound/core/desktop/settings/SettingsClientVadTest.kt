@@ -22,15 +22,15 @@ class SettingsClientVadTest {
 
     @Test
     fun `vad endpointing default is true`() {
-        assertTrue(client.isVadEndpointingEnabled())
+        assertTrue(client.getVadEndpointing())
     }
 
     @Test
     fun `vad endpointing roundtrips`() {
-        client.setVadEndpointingEnabled(false)
-        assertFalse(client.isVadEndpointingEnabled())
-        client.setVadEndpointingEnabled(true)
-        assertTrue(client.isVadEndpointingEnabled())
+        client.setVadEndpointing(false)
+        assertFalse(client.getVadEndpointing())
+        client.setVadEndpointing(true)
+        assertTrue(client.getVadEndpointing())
     }
 
     @Test
