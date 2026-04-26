@@ -94,39 +94,36 @@ abstract class SherpaOfflineAsr<Options : AsrPluginOptions>(
             requestedProvider
         }
 
+        recognizer = runCatching { buildRecognizer(modelConfigBuilder, tokens, effectiveProvider) }
+            .getOrElse { error ->
+                if (effectiveProvider == ComputeProvider.CUDA) {
+                    log.warn("CUDA recognizer init failed (${error.message}); falling back to CPU.")
+                    gpuFallback = true
+                    buildRecognizer(modelConfigBuilder, tokens, ComputeProvider.CPU)
+                } else {
+                    throw error
+                }
+            }
+        recognizerLanguage = currentOptions.language
+        log.info("Recognizer created: ${model.id}/${recognizerLanguage?.iso2}")
+    }
+
+    private fun buildRecognizer(
+        modelConfigBuilder: OfflineModelConfig.Builder,
+        tokens: String,
+        provider: ComputeProvider,
+    ): OfflineRecognizer {
         val modelConfig = modelConfigBuilder
             .setTokens(tokens)
             .setNumThreads(Runtime.getRuntime().availableProcessors())
-            .setProvider(effectiveProvider.toSherpaProviderString())
+            .setProvider(provider.toSherpaProviderString())
             .setDebug(currentOptions.enableDebug)
             .build()
-
         val config = OfflineRecognizerConfig.builder()
             .setOfflineModelConfig(modelConfig)
             .setDecodingMethod("greedy_search")
             .build()
-
-        recognizer = runCatching { OfflineRecognizer(config) }.getOrElse { error ->
-            if (effectiveProvider == ComputeProvider.CUDA) {
-                log.info("CUDA recognizer init failed (${error.message}); falling back to CPU.")
-                gpuFallback = true
-                val cpuModelConfig = modelConfigBuilder
-                    .setTokens(tokens)
-                    .setNumThreads(Runtime.getRuntime().availableProcessors())
-                    .setProvider(ComputeProvider.CPU.toSherpaProviderString())
-                    .setDebug(currentOptions.enableDebug)
-                    .build()
-                val cpuConfig = OfflineRecognizerConfig.builder()
-                    .setOfflineModelConfig(cpuModelConfig)
-                    .setDecodingMethod("greedy_search")
-                    .build()
-                OfflineRecognizer(cpuConfig)
-            } else {
-                throw error
-            }
-        }
-        recognizerLanguage = currentOptions.language
-        log.info("Recognizer created: ${model.id}/${recognizerLanguage?.iso2}")
+        return OfflineRecognizer(config)
     }
 
     private fun ensureRecognizerLanguage() {
