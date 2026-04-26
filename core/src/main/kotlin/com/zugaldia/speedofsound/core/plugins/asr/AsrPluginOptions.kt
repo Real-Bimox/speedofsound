@@ -17,8 +17,15 @@ import kotlinx.serialization.Serializable
 @Serializable
 enum class ComputeProvider { CPU, CUDA }
 
-/** Sherpa's OfflineModelConfig.Builder.setProvider expects lowercase strings. */
-fun ComputeProvider.toSherpaProviderString(): String = name.lowercase()
+/**
+ * Sherpa's OfflineModelConfig.Builder.setProvider expects a known lowercase string.
+ * Explicit mapping (rather than name.lowercase()) keeps this compile-checked when new
+ * ComputeProvider values are added — Kotlin will require the new branch.
+ */
+fun ComputeProvider.toSherpaProviderString(): String = when (this) {
+    ComputeProvider.CPU -> "cpu"
+    ComputeProvider.CUDA -> "cuda"
+}
 
 /** Single source of truth for the default compute provider. */
 val DEFAULT_COMPUTE_PROVIDER: ComputeProvider = ComputeProvider.CPU
