@@ -6,6 +6,7 @@ import com.zugaldia.speedofsound.core.plugins.AppPluginCategory
 import com.zugaldia.speedofsound.core.plugins.AppPluginRegistry
 import com.zugaldia.speedofsound.core.plugins.asr.SherpaCanaryAsr
 import com.zugaldia.speedofsound.core.plugins.asr.SherpaCanaryAsrOptions
+import com.zugaldia.speedofsound.core.plugins.asr.SherpaOfflineAsr
 import com.zugaldia.speedofsound.core.plugins.asr.SherpaParakeetAsr
 import com.zugaldia.speedofsound.core.plugins.asr.SherpaParakeetAsrOptions
 import com.zugaldia.speedofsound.core.plugins.asr.SherpaWhisperAsr
@@ -96,6 +97,19 @@ class AsrProviderManager(
         val selectedProvider = providers.find { it.id == selectedProviderId }
         return selectedProvider?.name ?: ""
     }
+
+    /**
+     * Returns whether GPU (CUDA) is currently usable for ASR.
+     *
+     * Implementation: the bundled Sherpa JAR is CPU-only, so [SherpaOfflineAsr] will silently
+     * fall back to CPU on the first CUDA attempt and flip a process-local flag
+     * ([SherpaOfflineAsr.hasFallenBackToCpu]). Until that flag is set, GPU appears available;
+     * once tripped (i.e., a CUDA recognizer construction has failed in this process), GPU is
+     * reported unavailable for the rest of the process lifetime.
+     *
+     * Voice preferences (VAD-14) calls this to decide whether to grey out the GPU option.
+     */
+    fun isGpuAvailable(): Boolean = !SherpaOfflineAsr.hasFallenBackToCpu()
 
     private fun applyAsrOptions(pluginId: String, options: AsrPluginOptions) {
         val plugin = registry.getPluginById(AppPluginCategory.ASR, pluginId) ?: return
