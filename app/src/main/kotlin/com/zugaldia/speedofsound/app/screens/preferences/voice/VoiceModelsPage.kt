@@ -13,13 +13,19 @@ import com.zugaldia.speedofsound.app.screens.preferences.PreferencesViewModel
 import com.zugaldia.speedofsound.app.screens.preferences.shared.ActiveProviderComboRow
 import com.zugaldia.speedofsound.core.desktop.settings.SUPPORTED_LOCAL_ASR_MODELS
 import com.zugaldia.speedofsound.core.desktop.settings.VoiceModelProviderSetting
+import com.zugaldia.speedofsound.core.plugins.asr.ComputeProvider
+import com.zugaldia.speedofsound.core.plugins.asr.SherpaOfflineAsr
 import org.gnome.adw.ActionRow
+import org.gnome.adw.ComboRow
 import org.gnome.adw.PreferencesGroup
 import org.gnome.adw.PreferencesPage
+import org.gnome.adw.SpinRow
+import org.gnome.adw.SwitchRow
 import org.gnome.gtk.Align
 import org.gnome.gtk.Button
 import org.gnome.gtk.ListBox
 import org.gnome.gtk.SelectionMode
+import org.gnome.gtk.StringList
 import org.slf4j.LoggerFactory
 
 class VoiceModelsPage(private val viewModel: PreferencesViewModel) : PreferencesPage() {
@@ -65,11 +71,75 @@ class VoiceModelsPage(private val viewModel: PreferencesViewModel) : Preferences
 
         add(textProcessingGroup)
         add(providersGroup)
+        addEndpointingGroup()
+        addComputeGroup()
         setupNotifications()
     }
 
     private fun setupNotifications() {
         activeProviderComboRow.setupNotifications()
+    }
+
+    private fun addEndpointingGroup() {
+        val silenceSwitchRow = SwitchRow().apply {
+            title = "Auto-stop on silence"
+            subtitle = "End the utterance when silence is detected."
+            active = viewModel.getVadEndpointing()
+        }
+
+        val silenceSpinRow = SpinRow.withRange(
+            VAD_SILENCE_MIN,
+            VAD_SILENCE_MAX,
+            VAD_SILENCE_STEP
+        ).apply {
+            title = "Silence threshold (ms)"
+            subtitle = "Lower values feel more responsive but cut speech sooner."
+            digits = 0
+            value = viewModel.getVadMinSilenceMs().toDouble()
+            sensitive = silenceSwitchRow.active
+            onNotify("value") {
+                viewModel.setVadMinSilenceMs(value.toInt())
+            }
+        }
+
+        silenceSwitchRow.onNotify("active") {
+            viewModel.setVadEndpointing(silenceSwitchRow.active)
+            silenceSpinRow.sensitive = silenceSwitchRow.active
+        }
+
+        val group = PreferencesGroup().apply {
+            title = "Endpointing"
+            description = "Automatically end recording when you stop speaking."
+            add(silenceSwitchRow)
+            add(silenceSpinRow)
+        }
+
+        add(group)
+    }
+
+    private fun addComputeGroup() {
+        val backendComboRow = ComboRow().apply {
+            title = "ASR backend"
+            model = StringList(arrayOf("CPU", "GPU (CUDA)"))
+            selected = viewModel.getComputeProvider().ordinal
+            onNotify("selected") {
+                val choice = if (selected == 0) ComputeProvider.CPU else ComputeProvider.CUDA
+                viewModel.setComputeProvider(choice)
+            }
+        }
+
+        val gpuAvailable = !SherpaOfflineAsr.hasFallenBackToCpu()
+        if (!gpuAvailable) {
+            backendComboRow.sensitive = false
+            backendComboRow.subtitle = "Requires GPU-enabled Sherpa build"
+        }
+
+        val group = PreferencesGroup().apply {
+            title = "Compute device"
+            add(backendComboRow)
+        }
+
+        add(group)
     }
 
     fun refreshProviders() {
@@ -167,5 +237,11 @@ class VoiceModelsPage(private val viewModel: PreferencesViewModel) : Preferences
         addProviderToUI(provider)
         activeProviderComboRow.updateProviders(updatedProviders)
         updateAddProviderButtonState()
+    }
+
+    companion object {
+        private const val VAD_SILENCE_MIN = 200.0
+        private const val VAD_SILENCE_MAX = 2000.0
+        private const val VAD_SILENCE_STEP = 50.0
     }
 }

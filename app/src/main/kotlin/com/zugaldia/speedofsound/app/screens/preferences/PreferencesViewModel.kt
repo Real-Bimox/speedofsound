@@ -2,6 +2,7 @@ package com.zugaldia.speedofsound.app.screens.preferences
 
 import com.zugaldia.speedofsound.core.APPLICATION_URL_KEYBOARD_SHORTCUT
 import com.zugaldia.speedofsound.core.desktop.portals.PortalsClient
+import com.zugaldia.speedofsound.core.plugins.asr.ComputeProvider
 import com.zugaldia.speedofsound.core.desktop.settings.CredentialSetting
 import com.zugaldia.speedofsound.core.desktop.settings.SettingsClient
 import com.zugaldia.speedofsound.core.desktop.settings.TextModelProviderSetting
@@ -112,6 +113,19 @@ class PreferencesViewModel(
 
     fun getCustomVocabulary(): List<String> = settingsClient.getCustomVocabulary()
     fun setCustomVocabulary(value: List<String>): Boolean = settingsClient.setCustomVocabulary(value)
+
+    /*
+     * Voice Models page — VAD / Endpointing settings
+     */
+
+    fun getVadEndpointing(): Boolean = settingsClient.getVadEndpointing()
+    fun setVadEndpointing(value: Boolean): Boolean = settingsClient.setVadEndpointing(value)
+
+    fun getVadMinSilenceMs(): Int = settingsClient.getVadMinSilenceMs()
+    fun setVadMinSilenceMs(value: Int): Boolean = settingsClient.setVadMinSilenceMs(value)
+
+    fun getComputeProvider(): ComputeProvider = settingsClient.getComputeProvider()
+    fun setComputeProvider(value: ComputeProvider): Boolean = settingsClient.setComputeProvider(value)
 
     /*
      * Advanced page
