@@ -12,5 +12,5 @@ data class SherpaParakeetAsrOptions(
     override val modelId: String = DEFAULT_ASR_SHERPA_PARAKEET_MODEL_ID,
     override val language: Language = DEFAULT_LANGUAGE,
     override val enableDebug: Boolean = false,
-    override val computeProvider: String = "cpu",
+    override val computeProvider: ComputeProvider = DEFAULT_COMPUTE_PROVIDER,
 ) : AsrPluginOptions

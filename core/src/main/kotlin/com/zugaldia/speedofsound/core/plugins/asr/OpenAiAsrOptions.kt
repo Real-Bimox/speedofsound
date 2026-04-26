@@ -31,6 +31,7 @@ data class OpenAiAsrOptions(
     override val enableDebug: Boolean = false,
     val baseUrl: String? = null,
     val apiKey: String? = null,
+    override val computeProvider: ComputeProvider = DEFAULT_COMPUTE_PROVIDER,
     ) : AsrPluginOptions {
     companion object {
         val Default = OpenAiAsrOptions()

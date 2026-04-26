@@ -7,6 +7,20 @@ import com.zugaldia.speedofsound.core.plugins.SelectableProvider
 import kotlinx.serialization.Serializable
 
 /**
+ * ONNX inference backend for local Sherpa ASR.
+ *
+ * - [CPU] always works with the bundled Sherpa JAR.
+ * - [CUDA] requires a Sherpa build with `-DSHERPA_ONNX_ENABLE_GPU=ON`.
+ *   When the runtime cannot honor [CUDA], `SherpaOfflineAsr` silently falls back to [CPU]
+ *   (see VAD-3).
+ */
+@Serializable
+enum class ComputeProvider { CPU, CUDA }
+
+/** Single source of truth for the default compute provider. */
+val DEFAULT_COMPUTE_PROVIDER: ComputeProvider = ComputeProvider.CPU
+
+/**
  * Supported ASR providers.
  *
  * @param displayName Human-readable name for the provider
@@ -39,7 +53,7 @@ interface AsrPluginOptions : AppPluginOptions {
     val modelId: String
     val language: Language
     val enableDebug: Boolean
-    val computeProvider: String get() = "cpu"
+    val computeProvider: ComputeProvider
 }
 
 /**
