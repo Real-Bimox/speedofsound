@@ -17,7 +17,11 @@ class SileroVadModelsTest {
     fun `default VAD model has a non-empty name and download URL`() {
         val model = SUPPORTED_VAD_MODELS.getValue(DEFAULT_VAD_MODEL_ID)
         assertTrue(model.name.isNotBlank())
-        assertTrue(model.archiveFile!!.url!!.startsWith("https://"))
+        val archive = model.archiveFile
+        assertNotNull(archive)
+        val url = archive.url
+        assertNotNull(url)
+        assertTrue(url.startsWith("https://"))
     }
 
     @Test

@@ -24,6 +24,10 @@ val SUPPORTED_VAD_MODELS: Map<String, VoiceModel> = mapOf(
     DEFAULT_VAD_MODEL_ID to VoiceModel(
         id = DEFAULT_VAD_MODEL_ID,
         name = "Silero VAD v5",
+        // TODO(VAD-15): introduce a dedicated VAD provider (or non-ASR-typed catalog) and stop
+        // borrowing AsrProvider.SHERPA_WHISPER. Currently safe because no code path
+        // exhaustively switches on VoiceModel.provider — but a future when(provider) addition
+        // would silently misroute the VAD model into Whisper-specific logic.
         provider = AsrProvider.SHERPA_WHISPER,
         dataSizeMegabytes = 2L,
         archiveFile = VoiceModelFile(
