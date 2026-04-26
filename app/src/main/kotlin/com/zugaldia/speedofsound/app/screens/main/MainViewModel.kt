@@ -290,8 +290,9 @@ class MainViewModel(
      * are picked up by [DefaultDirector] without bypassing the plugin event system.
      */
     private fun buildVadEngineIfReady(): VadEngine? {
-        if (!settingsClient.getVadEndpointing()) return null
-        if (!modelManager.isModelDownloaded(DEFAULT_VAD_MODEL_ID)) return null
+        if (!settingsClient.getVadEndpointing() || !modelManager.isModelDownloaded(DEFAULT_VAD_MODEL_ID)) {
+            return null
+        }
         val modelPath = modelManager.getModelPath(DEFAULT_VAD_MODEL_ID).resolve("silero_vad.onnx")
         val vadOpts = VadOptions(
             modelPath = modelPath,
