@@ -7,6 +7,7 @@ import com.zugaldia.speedofsound.core.plugins.asr.AsrPlugin
 import com.zugaldia.speedofsound.core.plugins.asr.AsrRequest
 import com.zugaldia.speedofsound.core.plugins.llm.LlmPlugin
 import com.zugaldia.speedofsound.core.plugins.llm.LlmRequest
+import com.zugaldia.speedofsound.core.plugins.recorder.RecorderEvent
 import com.zugaldia.speedofsound.core.plugins.recorder.RecorderPlugin
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -45,6 +46,7 @@ class DefaultDirector(
 
     private val directorScope = CoroutineScope(Dispatchers.Default + directorJob + exceptionHandler)
     private var autoStopJob: Job? = null
+    private var vadJob: Job? = null
 
     private lateinit var recorder: RecorderPlugin<*> // Required
     private lateinit var asr: AsrPlugin<*> // Required
@@ -62,6 +64,15 @@ class DefaultDirector(
                 emitEvent(DirectorEvent.RecordingStarted)
                 startAutoStopTimer()
                 withContext(Dispatchers.IO) { recorder.startRecording() }
+                if (currentOptions.vadEndpointing) {
+                    vadJob = directorScope.launch {
+                        recorder.events.collect { event ->
+                            if (event is RecorderEvent.SpeechEnded) {
+                                directorScope.launch { stop() }
+                            }
+                        }
+                    }
+                }
             } catch (e: CancellationException) {
                 throw e
             } catch (@Suppress("TooGenericExceptionCaught") e: Throwable) {
@@ -74,6 +85,8 @@ class DefaultDirector(
     override suspend fun stop() {
         pipelineMutex.withLock {
             cancelAutoStopTimer()
+            vadJob?.cancel()
+            vadJob = null
             if (isCancelled) {
                 log.info("Pipeline was cancelled, skipping stop.")
                 return@withLock
@@ -182,6 +195,8 @@ class DefaultDirector(
 
     override suspend fun cancel() {
         cancelAutoStopTimer()
+        vadJob?.cancel()
+        vadJob = null
         isCancelled = true
         if (::recorder.isInitialized && recorder.isCurrentlyRecording()) {
             withContext(Dispatchers.IO) {
