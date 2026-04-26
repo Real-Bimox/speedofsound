@@ -307,8 +307,14 @@ class MainViewModel(
      * active recorder. Safe to call from any thread; [AppPlugin.updateOptions] is thread-safe.
      */
     private fun refreshVadEngine() {
-        val engine = buildVadEngineIfReady()
-        recorder.updateOptions(recorder.getOptions().copy(vadEngine = engine))
+        val oldOptions = recorder.getOptions()
+        val newEngine = buildVadEngineIfReady()
+        if (oldOptions.vadEngine === newEngine) return
+        recorder.updateOptions(oldOptions.copy(vadEngine = newEngine))
+        oldOptions.vadEngine?.let { stale ->
+            runCatching { stale.release() }
+                .onFailure { logger.warn("Stale VadEngine release failed: ${it.message}", it) }
+        }
     }
 
     private fun updateModelLabels() {
