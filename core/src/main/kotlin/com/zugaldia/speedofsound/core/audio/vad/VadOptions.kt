@@ -35,7 +35,13 @@ data class VadOptions(
     }
 
     companion object {
-        const val SAMPLE_RATE_8K: Int = 8_000   // Silero-only; not in AudioConstants
-        val SAMPLE_RATE_16K: Int = AudioConstants.AUDIO_SAMPLE_RATE_16KHZ
+        /** Silero-only sample rate; not represented in [AudioConstants]. */
+        const val SAMPLE_RATE_8K: Int = 8_000
+
+        /**
+         * Aliases [AudioConstants.AUDIO_SAMPLE_RATE_16KHZ] for use as a `VadOptions` default.
+         * Kept as `const val` so the value inlines at every call site.
+         */
+        const val SAMPLE_RATE_16K: Int = AudioConstants.AUDIO_SAMPLE_RATE_16KHZ
     }
 }
