@@ -52,6 +52,27 @@ class JvmRecorder(
             }
             return out
         }
+
+        /**
+         * Decode a little-endian PCM16 byte buffer into a caller-supplied [dest] array (zero-copy
+         * path for the recording loop). Public for unit-test access.
+         * @param bytes source buffer
+         * @param byteCount number of valid bytes (must be even; last byte is silently dropped if odd)
+         * @param dest pre-allocated destination; must have at least [byteCount]/2 elements
+         * @return number of samples written
+         */
+        fun decodePcm16LittleEndianInto(bytes: ByteArray, byteCount: Int, dest: ShortArray): Int {
+            val sampleCount = byteCount / PCM16_BYTES_PER_SAMPLE
+            require(dest.size >= sampleCount) {
+                "dest must be at least $sampleCount; got ${dest.size}"
+            }
+            for (i in 0 until sampleCount) {
+                val low = bytes[i * PCM16_BYTES_PER_SAMPLE].toInt() and BYTE_UNSIGNED_MASK
+                val high = bytes[i * PCM16_BYTES_PER_SAMPLE + 1].toInt()
+                dest[i] = ((high shl PCM16_HIGH_BYTE_SHIFT) or low).toShort()
+            }
+            return sampleCount
+        }
     }
 
     /**
@@ -123,9 +144,13 @@ class JvmRecorder(
             audioBuffer = ByteArrayOutputStream()
             isRecording = true
 
+            val bufferSize = targetDataLine?.bufferSize ?: DEFAULT_BUFFER_SIZE
+            val readSize = minOf(DEFAULT_BUFFER_SIZE, bufferSize)
+            val buffer = ByteArray(readSize)
+            val vadShortScratch: ShortArray? =
+                currentOptions.vadEngine?.let { ShortArray(readSize / PCM16_BYTES_PER_SAMPLE) }
+
             recordingThread = Thread {
-                val bufferSize = targetDataLine?.bufferSize ?: DEFAULT_BUFFER_SIZE
-                val buffer = ByteArray(minOf(DEFAULT_BUFFER_SIZE, bufferSize))
                 while (isRecording) {
                     val bytesRead = targetDataLine?.read(buffer, 0, buffer.size) ?: 0
                     if (bytesRead > 0) {
@@ -135,9 +160,9 @@ class JvmRecorder(
                             tryEmitEvent(RecorderEvent.RecordingLevel(level))
                         }
                         val vad = currentOptions.vadEngine
-                        if (vad != null) {
-                            val shorts = decodePcm16LittleEndian(buffer, bytesRead)
-                            vad.acceptPcm16(shorts)
+                        if (vad != null && vadShortScratch != null) {
+                            val sampleCount = decodePcm16LittleEndianInto(buffer, bytesRead, vadShortScratch)
+                            vad.acceptPcm16(vadShortScratch.copyOf(sampleCount))
                         }
                     }
                 }
@@ -190,13 +215,12 @@ class JvmRecorder(
     }
 
     override fun disable() {
+        if (isRecording) {
+            // Joins the capture thread before returning.
+            stopRecording().onFailure { log.warn("stopRecording failed during disable: ${it.message}") }
+        }
         runCatching { currentOptions.vadEngine?.release() }
             .onFailure { log.warn("VAD release failed in disable: ${it.message}") }
-        if (isRecording) {
-            stopRecording().onFailure { error ->
-                log.error("Failed to stop recording during disable: ${error.message}")
-            }
-        }
         super.disable()
     }
 }

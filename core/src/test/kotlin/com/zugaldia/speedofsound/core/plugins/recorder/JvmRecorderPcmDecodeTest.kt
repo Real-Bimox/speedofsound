@@ -3,6 +3,7 @@ package com.zugaldia.speedofsound.core.plugins.recorder
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class JvmRecorderPcmDecodeTest {
     @Test
@@ -40,5 +41,23 @@ class JvmRecorderPcmDecodeTest {
     fun `empty input returns empty`() {
         val shorts = JvmRecorder.decodePcm16LittleEndian(ByteArray(0), 0)
         assertEquals(0, shorts.size)
+    }
+
+    @Test
+    fun `decodePcm16LittleEndianInto fills caller buffer and returns sample count`() {
+        val bytes = byteArrayOf(0x00, 0x01, 0xFF.toByte(), 0x7F)
+        val dest = ShortArray(8)
+        val n = JvmRecorder.decodePcm16LittleEndianInto(bytes, bytes.size, dest)
+        assertEquals(2, n)
+        assertEquals(256.toShort(), dest[0])
+        assertEquals(32767.toShort(), dest[1])
+    }
+
+    @Test
+    fun `decodePcm16LittleEndianInto rejects undersized dest`() {
+        val bytes = byteArrayOf(0x00, 0x01, 0x00, 0x02)
+        assertFailsWith<IllegalArgumentException> {
+            JvmRecorder.decodePcm16LittleEndianInto(bytes, bytes.size, ShortArray(1))
+        }
     }
 }
