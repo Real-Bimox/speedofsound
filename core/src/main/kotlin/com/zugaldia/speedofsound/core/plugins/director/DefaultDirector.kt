@@ -46,6 +46,7 @@ class DefaultDirector(
 
     private val directorScope = CoroutineScope(Dispatchers.Default + directorJob + exceptionHandler)
     private var autoStopJob: Job? = null
+    @Volatile
     private var vadJob: Job? = null
 
     private lateinit var recorder: RecorderPlugin<*> // Required
@@ -56,6 +57,8 @@ class DefaultDirector(
         pipelineMutex.withLock {
             try {
                 isCancelled = false
+                vadJob?.cancel()
+                vadJob = null
                 recorder = registry.getActive(
                     AppPluginCategory.RECORDER) as? RecorderPlugin<*> ?: error("No recorder plugin available")
                 asr = registry.getActive(
