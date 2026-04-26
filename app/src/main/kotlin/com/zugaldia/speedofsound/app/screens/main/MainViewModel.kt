@@ -8,6 +8,9 @@ import com.zugaldia.speedofsound.app.portals.RemoteDesktopStatus
 import com.zugaldia.speedofsound.app.portals.TextUtils
 import com.zugaldia.speedofsound.app.settings.AsrProviderManager
 import com.zugaldia.speedofsound.app.settings.LlmProviderManager
+import com.zugaldia.speedofsound.core.audio.vad.DEFAULT_VAD_MODEL_ID
+import com.zugaldia.speedofsound.core.audio.vad.VadEngine
+import com.zugaldia.speedofsound.core.audio.vad.VadOptions
 import com.zugaldia.speedofsound.core.desktop.portals.PortalsClient
 import com.zugaldia.speedofsound.core.desktop.settings.DEFAULT_LANGUAGE
 import com.zugaldia.speedofsound.core.desktop.settings.DEFAULT_SECONDARY_LANGUAGE
@@ -20,10 +23,13 @@ import com.zugaldia.speedofsound.core.desktop.settings.KEY_SELECTED_TEXT_MODEL_P
 import com.zugaldia.speedofsound.core.desktop.settings.KEY_SELECTED_VOICE_MODEL_PROVIDER_ID
 import com.zugaldia.speedofsound.core.desktop.settings.KEY_TEXT_MODEL_PROVIDERS
 import com.zugaldia.speedofsound.core.desktop.settings.KEY_TEXT_PROCESSING_ENABLED
+import com.zugaldia.speedofsound.core.desktop.settings.KEY_VAD_ENDPOINTING
+import com.zugaldia.speedofsound.core.desktop.settings.KEY_VAD_MIN_SILENCE_MS
 import com.zugaldia.speedofsound.core.desktop.settings.KEY_VOICE_MODEL_PROVIDERS
 import com.zugaldia.speedofsound.core.desktop.settings.SettingsClient
 import com.zugaldia.speedofsound.core.languageFromIso2
 import com.zugaldia.speedofsound.core.FatalStartupException
+import com.zugaldia.speedofsound.core.models.voice.ModelManager
 import com.zugaldia.speedofsound.core.plugins.AppPluginCategory
 import com.zugaldia.speedofsound.core.plugins.AppPluginRegistry
 import com.zugaldia.speedofsound.core.plugins.director.DefaultDirector
@@ -77,6 +83,7 @@ class MainViewModel(
 
     private val asrProviderManager = AsrProviderManager(registry, settingsClient)
     private val llmProviderManager = LlmProviderManager(registry, settingsClient)
+    private val modelManager = ModelManager()
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(Dispatchers.Default + viewModelJob)
@@ -110,6 +117,10 @@ class MainViewModel(
                 llmProviderManager.activateSelectedProvider()
                 registry.setActiveById(AppPluginCategory.DIRECTOR, DefaultDirector.ID)
                 portalsSessionManager.initialize(viewModelScope)
+
+                // Wire the VadEngine now (model already on disk from a previous launch).
+                refreshVadEngine()
+
                 GLib.idleAdd(GLib.PRIORITY_DEFAULT) {
                     state.updateStage(AppStage.IDLE)
                     false
@@ -117,6 +128,16 @@ class MainViewModel(
             } catch (e: FatalStartupException) {
                 logger.error("A fatal error was encountered during startup.", e)
                 exitProcess(1)
+            }
+        }
+
+        // Trigger first-launch Silero VAD download in a separate coroutine so it does not
+        // block the main startup sequence. When download completes, wire the VadEngine.
+        if (settingsClient.getVadEndpointing() && !modelManager.isModelDownloaded(DEFAULT_VAD_MODEL_ID)) {
+            viewModelScope.launch(Dispatchers.IO) {
+                modelManager.downloadModel(DEFAULT_VAD_MODEL_ID)
+                    .onSuccess { refreshVadEngine() }
+                    .onFailure { logger.warn("Silero VAD download failed: ${it.message}", it) }
             }
         }
     }
@@ -255,7 +276,39 @@ class MainViewModel(
                 asrProviderManager.refreshProviderConfiguration()
                 llmProviderManager.refreshProviderConfiguration()
             }
+
+            KEY_VAD_ENDPOINTING, KEY_VAD_MIN_SILENCE_MS -> refreshVadEngine()
         }
+    }
+
+    /**
+     * Constructs a [VadEngine] when both conditions hold: VAD endpointing is enabled in settings
+     * AND the Silero VAD model is present on disk. Returns null otherwise.
+     *
+     * The emitter lambda routes VAD events through the recorder's public [RecorderPlugin.emitVadEvent]
+     * bridge so that [SpeechStarted]/[SpeechEnded] appear on the recorder's shared event flow and
+     * are picked up by [DefaultDirector] without bypassing the plugin event system.
+     */
+    private fun buildVadEngineIfReady(): VadEngine? {
+        if (!settingsClient.getVadEndpointing()) return null
+        if (!modelManager.isModelDownloaded(DEFAULT_VAD_MODEL_ID)) return null
+        val modelPath = modelManager.getModelPath(DEFAULT_VAD_MODEL_ID).resolve("silero_vad.onnx")
+        val vadOpts = VadOptions(
+            modelPath = modelPath,
+            minSilenceMs = settingsClient.getVadMinSilenceMs(),
+        )
+        return runCatching { VadEngine(vadOpts) { event -> recorder.emitVadEvent(event) } }
+            .onFailure { logger.warn("VadEngine construction failed: ${it.message}", it) }
+            .getOrNull()
+    }
+
+    /**
+     * Rebuilds the [VadEngine] (or clears it) and pushes the updated recorder options to the
+     * active recorder. Safe to call from any thread; [AppPlugin.updateOptions] is thread-safe.
+     */
+    private fun refreshVadEngine() {
+        val engine = buildVadEngineIfReady()
+        recorder.updateOptions(recorder.getOptions().copy(vadEngine = engine))
     }
 
     private fun updateModelLabels() {

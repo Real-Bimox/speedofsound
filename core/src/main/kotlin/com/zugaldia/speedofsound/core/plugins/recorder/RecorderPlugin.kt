@@ -32,4 +32,11 @@ abstract class RecorderPlugin<Options : RecorderPluginOptions>(initialOptions: O
      * Only devices that support audio capture are included.
      */
     abstract fun getAvailableDevices(): List<AudioInputDevice>
+
+    /**
+     * Public bridge so external callers (e.g. MainViewModel) can supply a [VadEngine] emitter
+     * that fires events through this recorder's event flow without needing access to the
+     * protected [tryEmitEvent] on [AppPlugin].
+     */
+    fun emitVadEvent(event: RecorderEvent): Boolean = tryEmitEvent(event)
 }
