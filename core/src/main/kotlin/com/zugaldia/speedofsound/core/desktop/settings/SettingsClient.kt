@@ -4,6 +4,8 @@ import com.zugaldia.speedofsound.core.languageFromIso2
 import com.zugaldia.speedofsound.core.models.voice.ModelManager
 import com.zugaldia.speedofsound.core.plugins.asr.AsrPluginOptions
 import com.zugaldia.speedofsound.core.plugins.asr.AsrProvider
+import com.zugaldia.speedofsound.core.plugins.asr.ComputeProvider
+import com.zugaldia.speedofsound.core.plugins.asr.DEFAULT_COMPUTE_PROVIDER
 import com.zugaldia.speedofsound.core.plugins.asr.OpenAiAsrOptions
 import com.zugaldia.speedofsound.core.plugins.asr.SherpaCanaryAsrOptions
 import com.zugaldia.speedofsound.core.plugins.asr.SherpaParakeetAsrOptions
@@ -341,5 +343,35 @@ class SettingsClient(val settingsStore: SettingsStore) {
     fun setTypingDelayMs(value: Int): Boolean =
         settingsStore.setInt(KEY_TYPING_DELAY_MS, value).also { success ->
             if (success) _settingsChanged.tryEmit(KEY_TYPING_DELAY_MS)
+        }
+
+    /*
+     * Voice page (VAD)
+     */
+
+    fun isVadEndpointingEnabled(): Boolean =
+        settingsStore.getBoolean(KEY_VAD_ENDPOINTING, DEFAULT_VAD_ENDPOINTING)
+
+    fun setVadEndpointingEnabled(value: Boolean): Boolean =
+        settingsStore.setBoolean(KEY_VAD_ENDPOINTING, value).also { success ->
+            if (success) _settingsChanged.tryEmit(KEY_VAD_ENDPOINTING)
+        }
+
+    fun getVadMinSilenceMs(): Int =
+        settingsStore.getInt(KEY_VAD_MIN_SILENCE_MS, DEFAULT_VAD_MIN_SILENCE_MS)
+
+    fun setVadMinSilenceMs(value: Int): Boolean =
+        settingsStore.setInt(KEY_VAD_MIN_SILENCE_MS, value).also { success ->
+            if (success) _settingsChanged.tryEmit(KEY_VAD_MIN_SILENCE_MS)
+        }
+
+    fun getComputeProvider(): ComputeProvider =
+        runCatching {
+            ComputeProvider.valueOf(settingsStore.getString(KEY_COMPUTE_PROVIDER, DEFAULT_COMPUTE_PROVIDER.name))
+        }.getOrDefault(DEFAULT_COMPUTE_PROVIDER)
+
+    fun setComputeProvider(value: ComputeProvider): Boolean =
+        settingsStore.setString(KEY_COMPUTE_PROVIDER, value.name).also { success ->
+            if (success) _settingsChanged.tryEmit(KEY_COMPUTE_PROVIDER)
         }
 }

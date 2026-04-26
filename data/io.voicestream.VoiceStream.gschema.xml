@@ -124,5 +124,28 @@
       <description>Delay in milliseconds between each virtual keyboard keystroke. Set to 0 to disable. Increase this if characters are dropped or appear out of order or like a slower typing effect.</description>
     </key>
 
+    <!-- Voice page (VAD) -->
+
+    <key name="vad-endpointing" type="b">
+      <default>true</default>
+      <summary>Auto-stop recording on detected silence</summary>
+      <description>Use Silero VAD to end the utterance automatically.</description>
+    </key>
+    <key name="vad-min-silence-ms" type="i">
+      <range min="200" max="2000"/>
+      <default>600</default>
+      <summary>Silence duration before VAD ends an utterance (ms)</summary>
+      <description>Lower values feel more responsive but cut speech sooner.</description>
+    </key>
+    <key name="compute-provider" type="s">
+      <choices>
+        <choice value="CPU"/>
+        <choice value="CUDA"/>
+      </choices>
+      <default>"CPU"</default>
+      <summary>ASR compute provider</summary>
+      <description>"CPU" or "CUDA" — name of the ComputeProvider enum value. GPU requires a Sherpa build with -DSHERPA_ONNX_ENABLE_GPU=ON.</description>
+    </key>
+
   </schema>
 </schemalist>

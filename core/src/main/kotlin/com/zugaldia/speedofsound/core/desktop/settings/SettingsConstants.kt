@@ -85,3 +85,15 @@ const val DEFAULT_CUSTOM_CONTEXT = ""
 
 const val KEY_CUSTOM_VOCABULARY = "custom-vocabulary"
 val DEFAULT_CUSTOM_VOCABULARY = emptyList<String>()
+
+// Voice page (VAD)
+
+const val KEY_VAD_ENDPOINTING = "vad-endpointing"
+const val DEFAULT_VAD_ENDPOINTING = true
+
+const val KEY_VAD_MIN_SILENCE_MS = "vad-min-silence-ms"
+const val DEFAULT_VAD_MIN_SILENCE_MS = 600
+
+const val KEY_COMPUTE_PROVIDER = "compute-provider"
+// Note: the enum-typed default DEFAULT_COMPUTE_PROVIDER lives in AsrPluginOptions.kt.
+// Settings persist as the enum's name (i.e. "CPU" / "CUDA").
