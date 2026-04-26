@@ -36,15 +36,22 @@ class ChecksumVerifier {
     /**
      * Verify that a file's SHA256 checksum matches the expected value.
      * Returns [Result.success] if checksums match, [Result.failure] otherwise.
+     * A blank [expectedChecksum] skips verification and returns [Result.success].
      */
-    fun verifySha256(file: File, expectedChecksum: String): Result<Unit> = runCatching {
-        val actualChecksum = computeSha256(file)
-        if (actualChecksum != expectedChecksum.lowercase()) {
-            throw IllegalStateException(
-                "SHA256 checksum mismatch for ${file.name}. Expected: $expectedChecksum, Actual: $actualChecksum"
-            )
+    fun verifySha256(file: File, expectedChecksum: String): Result<Unit> {
+        if (expectedChecksum.isBlank()) {
+            log.info("Skipping checksum verification (no hash configured) for ${file.name}")
+            return Result.success(Unit)
         }
+        return runCatching {
+            val actualChecksum = computeSha256(file)
+            if (actualChecksum != expectedChecksum.lowercase()) {
+                throw IllegalStateException(
+                    "SHA256 checksum mismatch for ${file.name}. Expected: $expectedChecksum, Actual: $actualChecksum"
+                )
+            }
 
-        log.info("SHA256 checksum verified for ${file.name}")
+            log.info("SHA256 checksum verified for ${file.name}")
+        }
     }
 }
