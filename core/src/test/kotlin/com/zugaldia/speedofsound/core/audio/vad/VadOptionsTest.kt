@@ -3,6 +3,7 @@ package com.zugaldia.speedofsound.core.audio.vad
 import java.nio.file.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 
 class VadOptionsTest {
     @Test
@@ -42,5 +43,40 @@ class VadOptionsTest {
         assertEquals(800, opts.minSilenceMs)
         assertEquals(300, opts.minSpeechMs)
         assertEquals(8_000, opts.sampleRate)
+    }
+
+    @Test
+    fun `threshold above 1 is rejected`() {
+        assertFailsWith<IllegalArgumentException> {
+            VadOptions(modelPath = Path.of("/m"), threshold = 1.5f)
+        }
+    }
+
+    @Test
+    fun `threshold below 0 is rejected`() {
+        assertFailsWith<IllegalArgumentException> {
+            VadOptions(modelPath = Path.of("/m"), threshold = -0.1f)
+        }
+    }
+
+    @Test
+    fun `unsupported sample rate is rejected`() {
+        assertFailsWith<IllegalArgumentException> {
+            VadOptions(modelPath = Path.of("/m"), sampleRate = 44_100)
+        }
+    }
+
+    @Test
+    fun `non-positive minSilenceMs is rejected`() {
+        assertFailsWith<IllegalArgumentException> {
+            VadOptions(modelPath = Path.of("/m"), minSilenceMs = 0)
+        }
+    }
+
+    @Test
+    fun `non-positive minSpeechMs is rejected`() {
+        assertFailsWith<IllegalArgumentException> {
+            VadOptions(modelPath = Path.of("/m"), minSpeechMs = -1)
+        }
     }
 }

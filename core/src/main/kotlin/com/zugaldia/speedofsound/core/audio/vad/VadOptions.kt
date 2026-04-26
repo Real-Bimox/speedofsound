@@ -20,5 +20,21 @@ data class VadOptions(
     val threshold: Float = 0.5f,
     val minSilenceMs: Int = 600,
     val minSpeechMs: Int = 250,
-    val sampleRate: Int = 16_000,
-)
+    val sampleRate: Int = SAMPLE_RATE_16K,
+) {
+    init {
+        require(threshold in 0.0f..1.0f) {
+            "threshold must be in [0.0, 1.0]; got $threshold"
+        }
+        require(sampleRate == SAMPLE_RATE_8K || sampleRate == SAMPLE_RATE_16K) {
+            "Silero VAD supports sample rates 8000 and 16000 Hz; got $sampleRate"
+        }
+        require(minSilenceMs > 0) { "minSilenceMs must be > 0; got $minSilenceMs" }
+        require(minSpeechMs > 0) { "minSpeechMs must be > 0; got $minSpeechMs" }
+    }
+
+    companion object {
+        const val SAMPLE_RATE_8K: Int = 8_000
+        const val SAMPLE_RATE_16K: Int = 16_000
+    }
+}
