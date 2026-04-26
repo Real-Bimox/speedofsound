@@ -19,15 +19,6 @@ abstract class SherpaOfflineAsr<Options : AsrPluginOptions>(
     initialOptions: Options,
 ) : AsrPlugin<Options>(initialOptions = initialOptions) {
 
-    companion object {
-        // Ideally, we use "cuda" for faster inference whenever available (Sherpa fallbacks to CPU if CUDA is not
-        // available). However, it seems that the official JAR files do not include this support. Assuming we can
-        // access the GPU from the sandboxed environment, we need a build of Sherpa with -DSHERPA_ONNX_ENABLE_GPU=ON.
-        // The next step is to make it work outside Flatpak/Snap (CLI), then we can tackle the sandboxes.
-        // TODO(VAD-2): remove this constant; SherpaOfflineAsr will read currentOptions.computeProvider.
-        const val PROVIDER = "cpu"
-    }
-
     private var recognizer: OfflineRecognizer? = null
     private var recognizerLanguage: Language? = null
 
@@ -87,7 +78,7 @@ abstract class SherpaOfflineAsr<Options : AsrPluginOptions>(
         val modelConfig = modelConfigBuilder
             .setTokens(tokens)
             .setNumThreads(Runtime.getRuntime().availableProcessors())
-            .setProvider(PROVIDER)
+            .setProvider(currentOptions.computeProvider.toSherpaProviderString())
             .setDebug(currentOptions.enableDebug)
             .build()
 
