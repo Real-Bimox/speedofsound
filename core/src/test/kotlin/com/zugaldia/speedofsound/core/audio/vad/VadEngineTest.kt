@@ -9,12 +9,15 @@ import kotlin.test.assertTrue
 class VadEngineTest {
 
     @Test
-    fun `convertPcm16ToFloat normalizes endpoints to plus-minus one`() {
+    fun `convertPcm16ToFloat normalizes endpoints into bounded range`() {
         val input = shortArrayOf(0, Short.MAX_VALUE, Short.MIN_VALUE)
         val out = VadEngine.convertPcm16ToFloat(input)
         assertEquals(0.0f, out[0])
         assertEquals(1.0f, out[1], 0.001f)
-        assertTrue(out[2] in -1.001f..-0.999f)
+        assertEquals(-1.0f, out[2])  // exact, no fuzz
+        // Both poles must lie in [-1.0, 1.0]
+        assertTrue(out[1] in -1.0f..1.0f)
+        assertTrue(out[2] in -1.0f..1.0f)
     }
 
     @Test
@@ -72,17 +75,56 @@ class VadEngineTest {
     }
 
     @Test
-    fun `state machine resets to idle on speech-active false`() {
+    fun `state machine emits SpeechEnded on speech-active false then SpeechStarted on next active`() {
         val emitted = mutableListOf<RecorderEvent>()
         val sm = VadEngine.StateMachine(emitter = { emitted += it })
 
-        sm.observeSpeechActive(true)
-        sm.observeSpeechActive(false)
-        // back to idle — a new speech segment must emit SpeechStarted again
-        sm.observeSpeechActive(true)
+        sm.observeSpeechActive(true)   // -> SpeechStarted
+        sm.observeSpeechActive(false)  // -> SpeechEnded (was previously silent)
+        sm.observeSpeechActive(true)   // -> SpeechStarted again
 
         assertEquals(
-            listOf<RecorderEvent>(RecorderEvent.SpeechStarted, RecorderEvent.SpeechStarted),
+            listOf<RecorderEvent>(
+                RecorderEvent.SpeechStarted,
+                RecorderEvent.SpeechEnded,
+                RecorderEvent.SpeechStarted,
+            ),
+            emitted,
+        )
+    }
+
+    @Test
+    fun `state machine does not double-emit SpeechEnded when both flush and active-false fire`() {
+        val emitted = mutableListOf<RecorderEvent>()
+        val sm = VadEngine.StateMachine(emitter = { emitted += it })
+
+        sm.observeSpeechActive(true)   // -> SpeechStarted
+        sm.observeSegmentFlush()       // -> SpeechEnded
+        sm.observeSpeechActive(false)  // dedup: no second SpeechEnded
+
+        assertEquals(
+            listOf<RecorderEvent>(
+                RecorderEvent.SpeechStarted,
+                RecorderEvent.SpeechEnded,
+            ),
+            emitted,
+        )
+    }
+
+    @Test
+    fun `state machine does not double-emit SpeechEnded when both active-false and flush fire`() {
+        val emitted = mutableListOf<RecorderEvent>()
+        val sm = VadEngine.StateMachine(emitter = { emitted += it })
+
+        sm.observeSpeechActive(true)   // -> SpeechStarted
+        sm.observeSpeechActive(false)  // -> SpeechEnded
+        sm.observeSegmentFlush()       // dedup: no second SpeechEnded
+
+        assertEquals(
+            listOf<RecorderEvent>(
+                RecorderEvent.SpeechStarted,
+                RecorderEvent.SpeechEnded,
+            ),
             emitted,
         )
     }

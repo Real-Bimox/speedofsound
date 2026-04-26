@@ -58,32 +58,34 @@ class VadEngine(
         }
     }
 
-    enum class State { IDLE, SPEAKING }
-
     /**
      * Pure state machine — no Sherpa dependency, fully unit-testable. The engine drives this
      * with two observations: [observeSpeechActive] (every chunk) and [observeSegmentFlush]
      * (whenever Sherpa emits a finalised segment via `pop()`).
+     *
+     * Either trigger (flush OR active=false) ends the current speech segment if one is active.
+     * Deduplication ensures at most one [RecorderEvent.SpeechEnded] is emitted per utterance,
+     * regardless of the order in which the two triggers arrive.
      */
     class StateMachine(
         private val emitter: (RecorderEvent) -> Unit,
     ) {
-        private var state: State = State.IDLE
+        private var inSpeech: Boolean = false
 
         fun observeSpeechActive(active: Boolean) {
-            if (active && state == State.IDLE) {
-                state = State.SPEAKING
+            if (active && !inSpeech) {
+                inSpeech = true
                 emitter(RecorderEvent.SpeechStarted)
-            } else if (!active && state == State.SPEAKING) {
-                state = State.IDLE
+            } else if (!active && inSpeech) {
+                inSpeech = false
+                emitter(RecorderEvent.SpeechEnded)
             }
         }
 
         fun observeSegmentFlush() {
-            if (state == State.SPEAKING) {
+            if (inSpeech) {
+                inSpeech = false
                 emitter(RecorderEvent.SpeechEnded)
-                // Stay SPEAKING until observeSpeechActive(false). Guards against
-                // back-to-back segments inside one recording emitting only one start.
             }
         }
     }
@@ -91,11 +93,25 @@ class VadEngine(
     companion object {
         private const val MS_PER_SECOND: Float = 1000.0f
 
-        /** Public for testability. Normalises PCM16 to `[-1.0, 1.0]` floats. */
+        /**
+         * Symmetric PCM16 divisor: 2^15 = 32768. Using this value instead of
+         * [Short.MAX_VALUE] (32767) keeps both poles within `[-1.0, 1.0]`:
+         * [Short.MIN_VALUE] → exactly −1.0f; [Short.MAX_VALUE] → +0.99996939f.
+         */
+        private const val PCM16_DIVISOR: Float = 32768.0f
+
+        /**
+         * Public for testability. Normalises PCM16 to `[-1.0, 1.0]` floats.
+         *
+         * Uses [PCM16_DIVISOR] (symmetric around zero) so that both poles are bounded:
+         * [Short.MAX_VALUE] → +0.99996939f and [Short.MIN_VALUE] → exactly −1.0f.
+         * Using [Short.MAX_VALUE] (32767) as divisor would map [Short.MIN_VALUE] to ≈ −1.00003,
+         * violating the contract.
+         */
         fun convertPcm16ToFloat(samples: ShortArray): FloatArray {
             val out = FloatArray(samples.size)
             for (i in samples.indices) {
-                out[i] = samples[i] / Short.MAX_VALUE.toFloat()
+                out[i] = samples[i] / PCM16_DIVISOR
             }
             return out
         }
