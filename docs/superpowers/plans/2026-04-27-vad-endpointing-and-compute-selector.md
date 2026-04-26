@@ -23,7 +23,7 @@
 
 ---
 
-## Task 1: Add `computeProvider` to `AsrPluginOptions`
+## Task 1: Add `ComputeProvider` enum + `computeProvider` field to `AsrPluginOptions`
 
 **Files:**
 - Modify: `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/AsrPluginOptions.kt`
@@ -31,6 +31,8 @@
 - Modify: `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/SherpaCanaryAsrOptions.kt`
 - Modify: `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/SherpaParakeetAsrOptions.kt`
 - Test: `core/src/test/kotlin/com/zugaldia/speedofsound/core/plugins/asr/AsrComputeProviderTest.kt`
+
+A typed enum (mirroring the existing `AsrProvider` pattern) avoids stringly-typed bugs at downstream consumers (`SherpaOfflineAsr` provider plumbing, settings persistence, UI combo binding). A single `DEFAULT_COMPUTE_PROVIDER` constant prevents the default value from drifting across multiple data classes.
 
 - [ ] **Step 1: Write the failing test**
 
@@ -42,15 +44,32 @@ import kotlin.test.assertEquals
 
 class AsrComputeProviderTest {
     @Test
-    fun `default compute provider is cpu for whisper`() {
+    fun `default compute provider is CPU for whisper`() {
         val opts = SherpaWhisperAsrOptions()
-        assertEquals("cpu", opts.computeProvider)
+        assertEquals(ComputeProvider.CPU, opts.computeProvider)
     }
 
     @Test
-    fun `compute provider can be overridden to cuda`() {
-        val opts = SherpaWhisperAsrOptions(computeProvider = "cuda")
-        assertEquals("cuda", opts.computeProvider)
+    fun `default compute provider is CPU for canary`() {
+        val opts = SherpaCanaryAsrOptions()
+        assertEquals(ComputeProvider.CPU, opts.computeProvider)
+    }
+
+    @Test
+    fun `default compute provider is CPU for parakeet`() {
+        val opts = SherpaParakeetAsrOptions()
+        assertEquals(ComputeProvider.CPU, opts.computeProvider)
+    }
+
+    @Test
+    fun `compute provider can be overridden to CUDA`() {
+        val opts = SherpaWhisperAsrOptions(computeProvider = ComputeProvider.CUDA)
+        assertEquals(ComputeProvider.CUDA, opts.computeProvider)
+    }
+
+    @Test
+    fun `default constant matches CPU`() {
+        assertEquals(ComputeProvider.CPU, DEFAULT_COMPUTE_PROVIDER)
     }
 }
 ```
@@ -60,18 +79,36 @@ class AsrComputeProviderTest {
 ```
 ./gradlew :core:test --tests "AsrComputeProviderTest"
 ```
-Expected: compilation error — `computeProvider` not found.
+Expected: compilation error — `ComputeProvider` and `DEFAULT_COMPUTE_PROVIDER` not found.
 
-- [ ] **Step 3: Add `computeProvider` to the interface with a CPU default**
+- [ ] **Step 3: Add the enum, default constant, and interface field**
 
-In `AsrPluginOptions.kt`, replace the interface body:
+At the top of `AsrPluginOptions.kt` (immediately after the existing imports and before `enum class AsrProvider`), add:
+
+```kotlin
+/**
+ * ONNX inference backend for local Sherpa ASR.
+ *
+ * - [CPU] always works with the bundled Sherpa JAR.
+ * - [CUDA] requires a Sherpa build with `-DSHERPA_ONNX_ENABLE_GPU=ON`.
+ *   When the runtime cannot honor [CUDA], `SherpaOfflineAsr` silently falls back to [CPU]
+ *   (see Task VAD-3).
+ */
+@Serializable
+enum class ComputeProvider { CPU, CUDA }
+
+/** Single source of truth for the default compute provider. */
+val DEFAULT_COMPUTE_PROVIDER: ComputeProvider = ComputeProvider.CPU
+```
+
+Then extend the interface (no `get()` default — pair with the data-class change in Step 4):
 
 ```kotlin
 interface AsrPluginOptions : AppPluginOptions {
     val modelId: String
     val language: Language
     val enableDebug: Boolean
-    val computeProvider: String get() = "cpu"
+    val computeProvider: ComputeProvider
 }
 ```
 
@@ -83,10 +120,12 @@ data class SherpaWhisperAsrOptions(
     override val modelId: String = DEFAULT_ASR_SHERPA_WHISPER_MODEL_ID,
     override val language: Language = DEFAULT_LANGUAGE,
     override val enableDebug: Boolean = false,
-    override val computeProvider: String = "cpu",
+    override val computeProvider: ComputeProvider = DEFAULT_COMPUTE_PROVIDER,
 ) : AsrPluginOptions
 ```
-Apply the same one-line addition to `SherpaCanaryAsrOptions.kt` and `SherpaParakeetAsrOptions.kt`. Do NOT modify `OpenAiAsrOptions.kt` — it inherits the interface default.
+Apply the same single-line addition (referencing `DEFAULT_COMPUTE_PROVIDER`, NOT a literal) to `SherpaCanaryAsrOptions.kt` and `SherpaParakeetAsrOptions.kt`.
+
+For `OpenAiAsrOptions.kt`: since the interface no longer provides a `get()` default, you MUST add `override val computeProvider: ComputeProvider = DEFAULT_COMPUTE_PROVIDER,` to that data class as well. Cloud ASR ignores the value in practice; the field exists purely to satisfy the interface and keep storage uniform.
 
 - [ ] **Step 5: Run tests**
 
@@ -102,8 +141,9 @@ git add core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/AsrPlugi
         core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/SherpaWhisperAsrOptions.kt \
         core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/SherpaCanaryAsrOptions.kt \
         core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/SherpaParakeetAsrOptions.kt \
+        core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/OpenAiAsrOptions.kt \
         core/src/test/kotlin/com/zugaldia/speedofsound/core/plugins/asr/AsrComputeProviderTest.kt
-git commit -m "feat(asr): add computeProvider field to AsrPluginOptions"
+git commit -m "feat(asr): add ComputeProvider enum and computeProvider field"
 ```
 
 ---
@@ -125,18 +165,18 @@ import kotlin.test.assertEquals
 class SherpaOfflineAsrProviderTest {
     @Test
     fun `provider derives from currentOptions, not from the const`() {
-        val opts = SherpaWhisperAsrOptions(computeProvider = "cuda")
-        assertEquals("cuda", opts.computeProvider)
+        val opts = SherpaWhisperAsrOptions(computeProvider = ComputeProvider.CUDA)
+        assertEquals(ComputeProvider.CUDA, opts.computeProvider)
     }
 }
 ```
 
 - [ ] **Step 2: Replace the const with a runtime read**
 
-In `SherpaOfflineAsr.kt`, delete the companion's `const val PROVIDER = "cpu"` line and the surrounding comment block. Replace the line `.setProvider(PROVIDER)` inside `createRecognizer()` (around line 90) with:
+In `SherpaOfflineAsr.kt`, delete the companion's `const val PROVIDER = "cpu"` line and the surrounding comment block. Sherpa's `OfflineModelConfig.Builder.setProvider(...)` takes a string, so convert at the boundary. Replace the line `.setProvider(PROVIDER)` inside `createRecognizer()` (around line 90) with:
 
 ```kotlin
-.setProvider(currentOptions.computeProvider)
+.setProvider(currentOptions.computeProvider.name.lowercase())
 ```
 
 - [ ] **Step 3: Run the suite**
@@ -179,12 +219,12 @@ Wrap the recognizer construction in `createRecognizer()` (around line 98) so it 
 
 ```kotlin
 val requestedProvider = currentOptions.computeProvider
-val effectiveProvider = if (requestedProvider == "cuda" && gpuFallback) "cpu" else requestedProvider
+val effectiveProvider = if (requestedProvider == ComputeProvider.CUDA && gpuFallback) ComputeProvider.CPU else requestedProvider
 
 val modelConfig = modelConfigBuilder
     .setTokens(tokens)
     .setNumThreads(Runtime.getRuntime().availableProcessors())
-    .setProvider(effectiveProvider)
+    .setProvider(effectiveProvider.name.lowercase())
     .setDebug(currentOptions.enableDebug)
     .build()
 
@@ -194,13 +234,13 @@ val config = OfflineRecognizerConfig.builder()
     .build()
 
 recognizer = runCatching { OfflineRecognizer(config) }.getOrElse { error ->
-    if (effectiveProvider == "cuda") {
+    if (effectiveProvider == ComputeProvider.CUDA) {
         log.info("GPU recognizer init failed (${error.message}); falling back to CPU.")
         gpuFallback = true
         val cpuModelConfig = modelConfigBuilder
             .setTokens(tokens)
             .setNumThreads(Runtime.getRuntime().availableProcessors())
-            .setProvider("cpu")
+            .setProvider(ComputeProvider.CPU.name.lowercase())
             .setDebug(currentOptions.enableDebug)
             .build()
         val cpuConfig = OfflineRecognizerConfig.builder()
@@ -850,7 +890,8 @@ const val KEY_COMPUTE_PROVIDER = "compute-provider"
 
 const val DEFAULT_VAD_ENDPOINTING = true
 const val DEFAULT_VAD_MIN_SILENCE_MS = 600
-const val DEFAULT_COMPUTE_PROVIDER = "cpu"
+// Note: the enum-typed default `DEFAULT_COMPUTE_PROVIDER` lives next to the enum in
+// AsrPluginOptions.kt. Settings persist as the enum's `name` (i.e. "CPU" / "CUDA").
 ```
 
 - [ ] **Step 2: Add typed accessors to `SettingsClient.kt`**
@@ -869,11 +910,12 @@ fun getVadMinSilenceMs(): Int =
 fun setVadMinSilenceMs(value: Int) =
     store.setInt(KEY_VAD_MIN_SILENCE_MS, value)
 
-fun getComputeProvider(): String =
-    store.getString(KEY_COMPUTE_PROVIDER, DEFAULT_COMPUTE_PROVIDER)
+fun getComputeProvider(): ComputeProvider =
+    runCatching { ComputeProvider.valueOf(store.getString(KEY_COMPUTE_PROVIDER, DEFAULT_COMPUTE_PROVIDER.name)) }
+        .getOrDefault(DEFAULT_COMPUTE_PROVIDER)
 
-fun setComputeProvider(value: String) =
-    store.setString(KEY_COMPUTE_PROVIDER, value)
+fun setComputeProvider(value: ComputeProvider) =
+    store.setString(KEY_COMPUTE_PROVIDER, value.name)
 ```
 If `SettingsStore` lacks `getInt`/`setInt`, add them following the existing `getBoolean`/`getString` pattern in both `GioStore` and `PropertiesStore`.
 
@@ -894,12 +936,12 @@ Inside `<schema id="io.voicestream.VoiceStream" path="/io/voicestream/VoiceStrea
 </key>
 <key name="compute-provider" type="s">
   <choices>
-    <choice value="cpu"/>
-    <choice value="cuda"/>
+    <choice value="CPU"/>
+    <choice value="CUDA"/>
   </choices>
-  <default>"cpu"</default>
+  <default>"CPU"</default>
   <summary>ASR compute provider</summary>
-  <description>"cpu" or "cuda". GPU requires a Sherpa build with -DSHERPA_ONNX_ENABLE_GPU=ON.</description>
+  <description>"CPU" or "CUDA" — the name of the ComputeProvider enum value. GPU requires a Sherpa build with -DSHERPA_ONNX_ENABLE_GPU=ON.</description>
 </key>
 ```
 
@@ -1003,7 +1045,7 @@ Add a new `private fun addEndpointingGroup()` that constructs an `Adw.Preference
 - [ ] **Step 3: Add the compute group**
 
 Add `private fun addComputeGroup()` that constructs an `Adw.PreferencesGroup` titled "Compute" containing:
-- `Adw.ComboRow` titled "Compute device" with model `Gtk.StringList(arrayOf("CPU", "GPU (CUDA)"))`. Set `selected` from current setting (`"cpu"` → 0, `"cuda"` → 1). On `notifySelected`, persist via `setComputeProvider("cpu" or "cuda")`. If `viewModel.asrProviderManager.isGpuAvailable() == false`, set `sensitive=false` and `subtitle="Requires GPU-enabled Sherpa build"`.
+- `Adw.ComboRow` titled "Compute device" with model `Gtk.StringList(arrayOf("CPU", "GPU (CUDA)"))`. Map index ↔ enum: `ComputeProvider.CPU` → 0, `ComputeProvider.CUDA` → 1. Initial `selected` from `viewModel.settingsClient.getComputeProvider().ordinal`. On `notifySelected`, persist via `setComputeProvider(if (selected == 0) ComputeProvider.CPU else ComputeProvider.CUDA)`. If `viewModel.asrProviderManager.isGpuAvailable() == false`, set `sensitive=false` and `subtitle="Requires GPU-enabled Sherpa build"`.
 
 - [ ] **Step 4: Call both groups from `init`/`refreshProviders`**
 

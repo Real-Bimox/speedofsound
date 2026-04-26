@@ -43,8 +43,8 @@ Reduce perceived voice-typing latency by replacing the manual "press stop" gestu
 | `app/.../plugins/recorder/GStreamerRecorder.kt` | Same treatment as JvmRecorder. |
 | `core/.../plugins/director/DefaultDirector.kt` | Subscribe to `RecorderEvent.SpeechEnded` while recording; auto-call `stop()` when `currentOptions.vadEndpointing == true`. |
 | `core/.../plugins/director/DirectorOptions.kt` | Add `vadEndpointing: Boolean = true`, `vadOptions: VadOptions?`. |
-| `core/.../plugins/asr/SherpaOfflineAsr.kt` | Drop hardcoded `const val PROVIDER = "cpu"`. Read `currentOptions.computeProvider` (`"cpu"` or `"cuda"`). On `cuda` recognizer-creation failure: catch, log at INFO, set a per-process `gpuFallback` flag, retry with `"cpu"`. |
-| `core/.../plugins/asr/AsrPluginOptions.kt` | Add `computeProvider: String = "cpu"`. |
+| `core/.../plugins/asr/SherpaOfflineAsr.kt` | Drop hardcoded `const val PROVIDER = "cpu"`. Read `currentOptions.computeProvider` (a `ComputeProvider` enum) and pass `computeProvider.name.lowercase()` to Sherpa's `setProvider`. On `ComputeProvider.CUDA` recognizer-creation failure: catch, log at INFO, set a per-process `gpuFallback` flag, retry with `ComputeProvider.CPU`. |
+| `core/.../plugins/asr/AsrPluginOptions.kt` | Introduce `enum class ComputeProvider { CPU, CUDA }` (mirroring the existing `AsrProvider` pattern). Add `computeProvider: ComputeProvider = ComputeProvider.CPU` to the interface, with the default routed through a single `DEFAULT_COMPUTE_PROVIDER` constant. |
 | `core/.../desktop/settings/SettingsClient.kt` + `SettingsConstants.kt` | Persist three new keys: `vad-endpointing` (bool), `vad-min-silence-ms` (int), `compute-provider` (string enum: `"cpu"` \| `"cuda"`). |
 | `data/io.voicestream.VoiceStream.gschema.xml` | Schema entries for the three new keys. |
 | `app/.../screens/preferences/voice/VoiceModelsPage.kt` | Two new rows: **Auto-stop on silence** (`AdwSwitchRow`) with a collapsible **Silence threshold (ms)** `AdwSpinRow` (range 200–2000, step 50); and **Compute device** (`AdwComboRow`) with options CPU/GPU. GPU option grayed-out + tooltip when probe fails. |
@@ -88,7 +88,7 @@ The existing manual-stop path is preserved verbatim. `VadEngine` is never constr
 |---|---|---|---|
 | `vad-endpointing` | bool | `true` | New default; users opt out via toggle. |
 | `vad-min-silence-ms` | int | `600` | Range 200–2000 in UI. |
-| `compute-provider` | string | `"cpu"` | Enum: `"cpu"` / `"cuda"`. UI greys out non-functional options. |
+| `compute-provider` | string | `"CPU"` | Persisted as the `ComputeProvider` enum's `name` (`"CPU"` or `"CUDA"`). UI greys out non-functional options. |
 
 The Silero VAD model is auto-downloaded on first launch when `vad-endpointing` is true and the file is missing. ~2 MB; pulled from the Sherpa ONNX model zoo using the existing `ModelDownloader` + `ChecksumVerifier`.
 
