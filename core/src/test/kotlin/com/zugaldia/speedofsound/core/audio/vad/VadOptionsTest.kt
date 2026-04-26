@@ -12,7 +12,7 @@ class VadOptionsTest {
         assertEquals(0.5f, opts.threshold)
         assertEquals(600, opts.minSilenceMs)
         assertEquals(250, opts.minSpeechMs)
-        assertEquals(16_000, opts.sampleRate)
+        assertEquals(VadOptions.SAMPLE_RATE_16K, opts.sampleRate)
     }
 
     @Test
@@ -37,12 +37,12 @@ class VadOptionsTest {
             threshold = 0.7f,
             minSilenceMs = 800,
             minSpeechMs = 300,
-            sampleRate = 8_000,
+            sampleRate = VadOptions.SAMPLE_RATE_8K,
         )
         assertEquals(0.7f, opts.threshold)
         assertEquals(800, opts.minSilenceMs)
         assertEquals(300, opts.minSpeechMs)
-        assertEquals(8_000, opts.sampleRate)
+        assertEquals(VadOptions.SAMPLE_RATE_8K, opts.sampleRate)
     }
 
     @Test

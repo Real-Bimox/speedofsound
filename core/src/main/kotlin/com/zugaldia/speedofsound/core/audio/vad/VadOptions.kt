@@ -1,5 +1,6 @@
 package com.zugaldia.speedofsound.core.audio.vad
 
+import com.zugaldia.speedofsound.core.audio.AudioConstants
 import java.nio.file.Path
 
 /**
@@ -34,7 +35,7 @@ data class VadOptions(
     }
 
     companion object {
-        const val SAMPLE_RATE_8K: Int = 8_000
-        const val SAMPLE_RATE_16K: Int = 16_000
+        const val SAMPLE_RATE_8K: Int = 8_000   // Silero-only; not in AudioConstants
+        val SAMPLE_RATE_16K: Int = AudioConstants.AUDIO_SAMPLE_RATE_16KHZ
     }
 }
