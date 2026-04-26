@@ -8,6 +8,7 @@ import com.zugaldia.speedofsound.core.audio.AudioConstants.AUDIO_SAMPLE_WIDTH_32
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class RecorderOptionsTest {
@@ -70,5 +71,11 @@ class RecorderOptionsTest {
         assertFalse(original.computeVolumeLevel)
         assertTrue(modified.computeVolumeLevel)
         assertEquals(original.audioInfo, modified.audioInfo)
+    }
+
+    @Test
+    fun `default vadEngine is null`() {
+        val opts = RecorderOptions()
+        assertNull(opts.vadEngine)
     }
 }

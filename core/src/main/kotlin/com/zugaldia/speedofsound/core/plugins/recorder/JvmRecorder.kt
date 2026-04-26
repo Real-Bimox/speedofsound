@@ -27,6 +27,31 @@ class JvmRecorder(
         const val ID = "RECORDER_JVM"
         private const val DEFAULT_BUFFER_SIZE = 1024
         private const val THREAD_JOIN_TIMEOUT_MS = 1000L
+
+        /** Number of bytes per PCM16 sample. */
+        private const val PCM16_BYTES_PER_SAMPLE = 2
+
+        /** Bit shift to combine low and high bytes of a 16-bit sample. */
+        private const val PCM16_HIGH_BYTE_SHIFT = 8
+
+        /** Mask to treat a signed byte as an unsigned 8-bit value. */
+        private const val BYTE_UNSIGNED_MASK = 0xFF
+
+        /**
+         * Decode a little-endian PCM16 byte buffer into shorts. Public for unit-test access.
+         * @param bytes source buffer
+         * @param byteCount number of valid bytes (must be even; last byte is silently dropped if odd)
+         */
+        fun decodePcm16LittleEndian(bytes: ByteArray, byteCount: Int): ShortArray {
+            val sampleCount = byteCount / PCM16_BYTES_PER_SAMPLE
+            val out = ShortArray(sampleCount)
+            for (i in 0 until sampleCount) {
+                val low = bytes[i * PCM16_BYTES_PER_SAMPLE].toInt() and BYTE_UNSIGNED_MASK
+                val high = bytes[i * PCM16_BYTES_PER_SAMPLE + 1].toInt()
+                out[i] = ((high shl PCM16_HIGH_BYTE_SHIFT) or low).toShort()
+            }
+            return out
+        }
     }
 
     /**
@@ -109,6 +134,11 @@ class JvmRecorder(
                             val level = AudioManager.computeRmsLevel(buffer.copyOf(bytesRead))
                             tryEmitEvent(RecorderEvent.RecordingLevel(level))
                         }
+                        val vad = currentOptions.vadEngine
+                        if (vad != null) {
+                            val shorts = decodePcm16LittleEndian(buffer, bytesRead)
+                            vad.acceptPcm16(shorts)
+                        }
                     }
                 }
             }
@@ -160,6 +190,8 @@ class JvmRecorder(
     }
 
     override fun disable() {
+        runCatching { currentOptions.vadEngine?.release() }
+            .onFailure { log.warn("VAD release failed in disable: ${it.message}") }
         if (isRecording) {
             stopRecording().onFailure { error ->
                 log.error("Failed to stop recording during disable: ${error.message}")
