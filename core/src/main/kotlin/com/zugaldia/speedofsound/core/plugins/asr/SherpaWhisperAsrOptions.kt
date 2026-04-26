@@ -13,4 +13,5 @@ data class SherpaWhisperAsrOptions(
     override val modelId: String = DEFAULT_ASR_SHERPA_WHISPER_MODEL_ID,
     override val language: Language = DEFAULT_LANGUAGE,
     override val enableDebug: Boolean = false,
+    override val computeProvider: String = "cpu",
 ) : AsrPluginOptions

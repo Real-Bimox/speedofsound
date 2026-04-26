@@ -39,6 +39,7 @@ interface AsrPluginOptions : AppPluginOptions {
     val modelId: String
     val language: Language
     val enableDebug: Boolean
+    val computeProvider: String get() = "cpu"
 }
 
 /**
