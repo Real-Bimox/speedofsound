@@ -1,9 +1,11 @@
 package com.zugaldia.speedofsound.core.plugins.director
 
 import com.zugaldia.speedofsound.core.Language
+import com.zugaldia.speedofsound.core.audio.vad.VadOptions
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 class DirectorOptionsTest {
@@ -147,5 +149,30 @@ class DirectorOptionsTest {
         assertEquals("{LANGUAGE}", PROMPT_KEY_LANGUAGE)
         assertEquals("{CONTEXT}", PROMPT_KEY_CONTEXT)
         assertEquals("{VOCABULARY}", PROMPT_KEY_VOCABULARY)
+    }
+
+    @Test
+    fun `vadEndpointing default is true`() {
+        val opts = DirectorOptions()
+        assertTrue(opts.vadEndpointing)
+    }
+
+    @Test
+    fun `vadOptions default is null`() {
+        val opts = DirectorOptions()
+        assertNull(opts.vadOptions)
+    }
+
+    @Test
+    fun `vadOptions can be set`() {
+        val v = VadOptions(modelPath = java.nio.file.Path.of("/tmp/m.onnx"))
+        val opts = DirectorOptions(vadOptions = v)
+        assertEquals(v, opts.vadOptions)
+    }
+
+    @Test
+    fun `vadEndpointing can be disabled`() {
+        val opts = DirectorOptions(vadEndpointing = false)
+        assertFalse(opts.vadEndpointing)
     }
 }
