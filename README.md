@@ -29,7 +29,28 @@ Voice typing for the Linux desktop:
 - *Optional* text polishing with LLMs (Anthropic, Google, OpenAI), with support for a custom context and vocabulary.
 - Supports self-hosted services like vLLM, Ollama, and llama.cpp (cloud services supported but not required).
 
-## Getting Started
+## Install (Linux AppImage, recommended for VoiceStream fork)
+
+VoiceStream ships as a self-contained AppImage. No system installation, no admin rights, no system Java required — copy and run.
+
+```bash
+# CPU build (works on any glibc-compatible Linux x86_64)
+wget https://github.com/Real-Bimox/speedofsound/releases/download/v0.15.0/voicestream-0.15.0-x86_64.AppImage
+chmod +x voicestream-0.15.0-x86_64.AppImage
+./voicestream-0.15.0-x86_64.AppImage
+```
+
+For NVIDIA GPU acceleration (CUDA 12 / cuDNN 9), grab the `-gpu` variant. Requires NVIDIA driver R535+ AND CUDA 12 + cuDNN 9 installed on the host (Sherpa loads them at runtime); falls back to CPU silently otherwise.
+
+```bash
+wget https://github.com/Real-Bimox/speedofsound/releases/download/v0.15.0/voicestream-0.15.0-gpu-x86_64.AppImage
+chmod +x voicestream-0.15.0-gpu-x86_64.AppImage
+./voicestream-0.15.0-gpu-x86_64.AppImage
+```
+
+To build from source, see [docs/RESUME.md](docs/RESUME.md) and `make appimage` / `make appimage-gpu`.
+
+## Getting Started (upstream Speed of Sound)
 
 <div style="display: flex; gap: 10px; align-items: center;">
     <a href="https://flathub.org/en/apps/io.speedofsound.SpeedOfSound">
@@ -40,7 +61,7 @@ Voice typing for the Linux desktop:
     </a>
 </div>
 
-The easiest and recommended way to install Speed of Sound is from
+The easiest and recommended way to install upstream Speed of Sound is from
 [Flathub](https://flathub.org/en/apps/io.speedofsound.SpeedOfSound) or from the
 [Snap Store](https://snapcraft.io/speedofsound).
 Alternatively, AppImage, Deb, and RPM packages are also available from the [releases page](https://github.com/zugaldia/speedofsound/releases/latest).

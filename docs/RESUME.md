@@ -1,6 +1,6 @@
 # VoiceStream — Session Resume Guide
 
-**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.14.0`. **Last verified working commit:** TBD on next commit (VAD-7 fix landed; `:core:check :cli:check :app:compileKotlin :app:detekt` green).
+**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.15.0`. **Last verified working commit:** TBD on next push (v0.15.0 lands VAD-15 + GPU JAR + AppImage; `:core:check :cli:check :app:compileKotlin :app:detekt` green; both `make appimage` and `make appimage-gpu` produce self-contained AppImages, 201 MB and 423 MB respectively).
 
 This document captures everything needed to pick up VoiceStream development after a context loss. Read this first; then drill into the spec/plan docs and `git log` for detail.
 
@@ -108,16 +108,18 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 
 ## 6 — Open issues / next steps (in priority order)
 
+### ✓ Closed in v0.15.0
+- VAD-15: dedicated `VadProvider` enum; `VoiceModel.provider` widened to `SelectableProvider` so VAD models stop borrowing `AsrProvider.SHERPA_WHISPER`.
+- GPU Sherpa native-lib JAR: `scripts/build-gpu-jar.sh` packages the CUDA 12 / cuDNN 9 GPU bundle; `-Pvoicestream.gpu=true` selects it.
+- Self-contained AppImage distribution: `make appimage` → CPU (~201 MB), `make appimage-gpu` → GPU (~423 MB).
+- Rebrand bug fix in `data/io.voicestream.VoiceStream.metainfo.xml.in` (unreachable `voicestream.io` URLs and wrong fork repo path).
+
 ### High value, small effort
-*(none currently — VAD-7 closed in v0.14.0 via `ArchiveFormat.SINGLE_FILE`; see plan §Status)*
+*(none currently)*
 
 ### Medium value, larger effort
-2. **GPU build of Sherpa ONNX.** Hardware available: RTX 3090 (24 GB) + A6000 (48 GB) on this host. The CPU/GPU UI switch we wired in is currently a no-op because the bundled JAR is CPU-only. Steps:
-   - Build Sherpa ONNX with `-DSHERPA_ONNX_ENABLE_GPU=ON` against CUDA inside a podman container
-   - Drop the resulting JAR into `core/libs/sherpa-onnx-v1.12.33.jar` (replace existing)
-   - Set up `nvidia-container-toolkit` for distrobox so the GUI app can see the GPU at runtime
-   - The UI selector becomes functional with no further code changes (silent CPU fallback in `SherpaOfflineAsr` already handles missing/broken CUDA gracefully)
-3. **Test Whisper Turbo** end-to-end. Currently bundled only Whisper Tiny works. From the running app: Preferences → Library → download `sherpa-onnx-whisper-turbo` (989 MB, multilingual, INT8) → Voice prefs → make Turbo the active provider.
+2. **Smoke-test GPU AppImage end-to-end on this host (RTX 3090 / A6000).** Build the GPU artifact (`make appimage-gpu`), launch on a host with NVIDIA driver R535+ and CUDA 12 / cuDNN 9 in `LD_LIBRARY_PATH`, set ComputeProvider=CUDA in Voice prefs, transcribe; confirm Sherpa logs `compute_provider=cuda` instead of falling back to CPU. Also test on a CPU-only host to confirm graceful fallback (`SherpaOfflineAsr` demotes silently per VAD-3).
+3. **Test Whisper Turbo** end-to-end. Currently only bundled Whisper Tiny is exercised. From the running app: Preferences → Library → download `sherpa-onnx-whisper-turbo` (989 MB, multilingual, INT8) → Voice prefs → make Turbo the active provider.
 
 ### Low value but useful for daily ergonomics
 4. **Fix XDG portal app-id warning** by running `make install` (writes `.desktop` + metainfo into `~/.local/share/applications/`). Or just package as Flatpak — that fixes everything at once.
@@ -154,6 +156,10 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 | VAD engine | `core/src/main/kotlin/com/zugaldia/speedofsound/core/audio/vad/VadEngine.kt` |
 | VAD model catalog | `core/src/main/kotlin/com/zugaldia/speedofsound/core/audio/vad/SileroVadModels.kt` (uses `ArchiveFormat.SINGLE_FILE` for raw `.onnx` download) |
 | Archive format dispatch | `core/src/main/kotlin/com/zugaldia/speedofsound/core/models/voice/VoiceModel.kt` (`ArchiveFormat` enum) and `ModelManager.kt` / `ModelFileManager.copyRawComponent` |
+| VAD provider             | `core/src/main/kotlin/com/zugaldia/speedofsound/core/audio/vad/VadProvider.kt` (separate from `AsrProvider`) |
+| GPU JAR build script     | `scripts/build-gpu-jar.sh` (downloads + verifies + repackages Sherpa CUDA tarball) |
+| GPU build flag           | `-Pvoicestream.gpu=true` selects the GPU native-lib JAR in `core/build.gradle.kts` |
+| AppImage targets         | `make appimage` (CPU) / `make appimage-gpu` (GPU) — outputs land in `app/build/jpackage/` |
 | Director | `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/director/DefaultDirector.kt` (VAD subscription lives here) |
 | JVM recorder | `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/recorder/JvmRecorder.kt` |
 | GStreamer recorder | `app/src/main/kotlin/com/zugaldia/speedofsound/app/plugins/recorder/GStreamerRecorder.kt` |
