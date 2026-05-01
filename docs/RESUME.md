@@ -1,6 +1,6 @@
 # VoiceStream — Session Resume Guide
 
-**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.15.0`. **Last verified working commit:** TBD on next push (v0.15.0 lands VAD-15 + GPU JAR + AppImage; `:core:check :cli:check :app:compileKotlin :app:detekt` green; both `make appimage` and `make appimage-gpu` produce self-contained AppImages, 201 MB and 423 MB respectively).
+**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.15.0`. **Last verified working commit:** `82f20c5` (v0.15.0: VAD-15 + GPU JAR + AppImage; `:core:check :cli:check :app:compileKotlin :app:detekt` green for both CPU and `-Pvoicestream.gpu=true`; both `make appimage` and `make appimage-gpu` produce self-contained AppImages, 201 MB and 423 MB respectively).
 
 This document captures everything needed to pick up VoiceStream development after a context loss. Read this first; then drill into the spec/plan docs and `git log` for detail.
 
