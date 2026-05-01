@@ -115,7 +115,9 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 - App-ID files renamed: `data/ai.nexiant.voicestream.{desktop.in,gschema.xml,metainfo.xml.in,service.in}`, `data/icons/hicolor/scalable/apps/ai.nexiant.voicestream.svg`, `ai.nexiant.voicestream.yml` (Flatpak manifest).
 - `CLAUDE.md` → `AGENTS.md`; all "Claude Code" / "claude.ai" tool-attribution references stripped from repo (Anthropic LLM model display strings stay because they're third-party product names).
 - Obsolete `scripts/rebrand.sh` (Speed of Sound → Sound Of Stream relic) removed.
+- Stale `assets/banners/{github,snapcraft}.png` (legacy upstream marketing rasters, never referenced) removed.
 - AppImage filename pattern: `voicestream-0.16.0-x86_64.AppImage` (binary name `voicestream` retained per project-identifier convention).
+- **GSettings auto-migration:** `LegacySchemaMigrator` runs on first launch, copies any v0.15.0 dconf entries from `/io/voicestream/VoiceStream/` to `/ai/nexiant/voicestream/` via `dconf dump | dconf load`. Gracefully no-ops when nothing to migrate, when the new schema already has data, or when `dconf` isn't installed. 5 unit tests in `LegacySchemaMigratorTest` cover the branching.
 
 ### ✓ Closed in v0.15.0
 - VAD-15: dedicated `VadProvider` enum; `VoiceModel.provider` widened to `SelectableProvider` so VAD models stop borrowing `AsrProvider.SHERPA_WHISPER`.

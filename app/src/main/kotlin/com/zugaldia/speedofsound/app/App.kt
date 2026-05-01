@@ -4,6 +4,8 @@ import com.zugaldia.speedofsound.app.screens.main.MainViewModel
 import com.zugaldia.speedofsound.app.screens.main.MainWindow
 import com.zugaldia.speedofsound.app.screens.welcome.WelcomeWindow
 import com.zugaldia.speedofsound.app.settings.GioStore
+import com.zugaldia.speedofsound.app.settings.LegacySchemaMigrator
+import com.zugaldia.speedofsound.app.settings.MigrationOutcome
 import com.zugaldia.speedofsound.app.status.StatusNotifierService
 import com.zugaldia.speedofsound.core.desktop.settings.PropertiesStore
 import com.zugaldia.speedofsound.core.desktop.settings.SettingsClient
@@ -55,6 +57,18 @@ class SosApplication(applicationId: String, flags: Set<ApplicationFlags>) : Appl
                 StyleManager.getDefault().colorScheme = colorScheme
                 logger.info("Color scheme override set to: $colorScheme")
             }
+
+            // One-shot migration of v0.15.0 GSettings (io.voicestream.VoiceStream) →
+            // v0.16.0 (ai.nexiant.voicestream). No-op when nothing to migrate.
+            LegacySchemaMigrator().migrate()
+                .onSuccess { outcome ->
+                    if (outcome == MigrationOutcome.MIGRATED) {
+                        logger.info("Migrated user settings from legacy schema to ai.nexiant.voicestream.")
+                    } else {
+                        logger.debug("Legacy schema migration outcome: $outcome")
+                    }
+                }
+                .onFailure { logger.warn("Legacy schema migration threw; continuing with empty new schema.", it) }
 
             settingsClient = SettingsClient(buildSettingsStore())
             portalsClient = PortalsClient()
