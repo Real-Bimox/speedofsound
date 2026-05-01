@@ -89,8 +89,15 @@ class ModelManager(
         try {
             val downloadedFile = downloadArchive(modelId, archiveFile, tempDir)
             verifyArchive(modelId, downloadedFile, archiveFile)
-            extractArchive(modelId, downloadedFile, tempDir)
-            copyFiles(modelId, model, tempDir)
+            when (archiveFile.format) {
+                ArchiveFormat.TAR_BZ2 -> {
+                    extractArchive(modelId, downloadedFile, tempDir)
+                    copyFiles(modelId, model, tempDir)
+                }
+                ArchiveFormat.SINGLE_FILE -> {
+                    copyRawDownload(modelId, model, downloadedFile)
+                }
+            }
             emitCompleted(modelId, ModelManagerEvent.Completed.Operation.DOWNLOAD)
         } finally {
             cleanupTempDirectory(tempDir)
@@ -170,6 +177,18 @@ class ModelManager(
         )
 
         modelFileManager.copyModelFiles(tempDir.toFile(), modelId, model).getOrThrow()
+    }
+
+    private suspend fun copyRawDownload(
+        modelId: String, model: VoiceModel, downloadedFile: File
+    ) {
+        emitProgress(
+            modelId = modelId,
+            operation = ModelManagerEvent.Progress.Operation.COPYING_FILES,
+            message = "Copying $modelId files"
+        )
+
+        modelFileManager.copyRawComponent(downloadedFile, modelId, model).getOrThrow()
     }
 
     private fun cleanupTempDirectory(tempDir: Path) {

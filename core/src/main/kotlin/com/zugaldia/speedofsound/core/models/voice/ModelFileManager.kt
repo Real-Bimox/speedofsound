@@ -68,6 +68,20 @@ class ModelFileManager(private val pathProvider: PathProvider, private val fileS
     }
 
     /**
+     * Copy a single downloaded file directly to the model directory under the
+     * lone component's name. For models distributed as a raw file rather than
+     * a tar.bz2 archive (e.g., Sherpa's silero_vad.onnx).
+     */
+    fun copyRawComponent(downloadedFile: File, modelId: String, model: VoiceModel): Result<Unit> = runCatching {
+        val component = model.components.singleOrNull()
+            ?: throw IllegalArgumentException(
+                "Raw-format model '$modelId' must declare exactly one component, got ${model.components.size}"
+            )
+        val destFile = getModelPath(modelId).resolve(component.name).toFile()
+        fileSystem.copyFile(downloadedFile, destFile, overwrite = true)
+    }
+
+    /**
      * Extract default model components from resources to the model directory.
      */
     fun extractDefaultModelFromResources(

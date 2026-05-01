@@ -1,6 +1,6 @@
 # VoiceStream — Session Resume Guide
 
-**Last updated:** 2026-04-27. **Current branch:** `main`. **Last verified working commit:** `f1010dd`.
+**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.14.0`. **Last verified working commit:** TBD on next commit (VAD-7 fix landed; `:core:check :cli:check :app:compileKotlin :app:detekt` green).
 
 This document captures everything needed to pick up VoiceStream development after a context loss. Read this first; then drill into the spec/plan docs and `git log` for detail.
 
@@ -109,10 +109,7 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 ## 6 — Open issues / next steps (in priority order)
 
 ### High value, small effort
-1. **VAD-7 download bug** — `SileroVadModels.kt`'s `archiveFile.url` points at the raw `silero_vad.onnx` file, but `ModelManager.downloadModel` always extracts as `.tar.bz2` and throws `Stream is not in the BZip2 format`. Two fixes:
-   - **(a)** Find a `.tar.bz2` packaged Silero archive on the Sherpa releases page and update the URL. Smallest change.
-   - **(b)** Teach `ModelManager.downloadModel` to detect single-file URLs (`.onnx`, etc.) and skip the extract step. More general.
-   Without this fix, **VAD never activates** — `vadEndpointing = true` is silently a no-op because the model never lands on disk. User has to press Stop manually.
+*(none currently — VAD-7 closed in v0.14.0 via `ArchiveFormat.SINGLE_FILE`; see plan §Status)*
 
 ### Medium value, larger effort
 2. **GPU build of Sherpa ONNX.** Hardware available: RTX 3090 (24 GB) + A6000 (48 GB) on this host. The CPU/GPU UI switch we wired in is currently a no-op because the bundled JAR is CPU-only. Steps:
@@ -155,7 +152,8 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 | ASR plugin base | `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/AsrPluginOptions.kt` (contains `ComputeProvider` enum) |
 | ASR Sherpa offline | `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/asr/SherpaOfflineAsr.kt` (CUDA fallback lives here) |
 | VAD engine | `core/src/main/kotlin/com/zugaldia/speedofsound/core/audio/vad/VadEngine.kt` |
-| VAD model catalog | `core/src/main/kotlin/com/zugaldia/speedofsound/core/audio/vad/SileroVadModels.kt` (broken URL — see issue #1) |
+| VAD model catalog | `core/src/main/kotlin/com/zugaldia/speedofsound/core/audio/vad/SileroVadModels.kt` (uses `ArchiveFormat.SINGLE_FILE` for raw `.onnx` download) |
+| Archive format dispatch | `core/src/main/kotlin/com/zugaldia/speedofsound/core/models/voice/VoiceModel.kt` (`ArchiveFormat` enum) and `ModelManager.kt` / `ModelFileManager.copyRawComponent` |
 | Director | `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/director/DefaultDirector.kt` (VAD subscription lives here) |
 | JVM recorder | `core/src/main/kotlin/com/zugaldia/speedofsound/core/plugins/recorder/JvmRecorder.kt` |
 | GStreamer recorder | `app/src/main/kotlin/com/zugaldia/speedofsound/app/plugins/recorder/GStreamerRecorder.kt` |

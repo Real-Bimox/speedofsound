@@ -1,5 +1,7 @@
 package com.zugaldia.speedofsound.core.audio.vad
 
+import com.zugaldia.speedofsound.core.models.voice.ArchiveFormat
+import com.zugaldia.speedofsound.core.models.voice.VoiceModelFile
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
@@ -37,5 +39,17 @@ class SileroVadModelsTest {
     @Test
     fun `unknown id returns null`() {
         assertEquals(null, SUPPORTED_VAD_MODELS["nope"])
+    }
+
+    @Test
+    fun `default VAD model archive format is SINGLE_FILE`() {
+        val archive = SUPPORTED_VAD_MODELS.getValue(DEFAULT_VAD_MODEL_ID).archiveFile
+        assertNotNull(archive)
+        assertEquals(ArchiveFormat.SINGLE_FILE, archive.format)
+    }
+
+    @Test
+    fun `VoiceModelFile defaults to TAR_BZ2 so existing tar bz2 models keep working`() {
+        assertEquals(ArchiveFormat.TAR_BZ2, VoiceModelFile(name = "x").format)
     }
 }

@@ -1,5 +1,6 @@
 package com.zugaldia.speedofsound.core.audio.vad
 
+import com.zugaldia.speedofsound.core.models.voice.ArchiveFormat
 import com.zugaldia.speedofsound.core.models.voice.VoiceModel
 import com.zugaldia.speedofsound.core.models.voice.VoiceModelFile
 import com.zugaldia.speedofsound.core.plugins.asr.AsrProvider
@@ -16,9 +17,10 @@ const val DEFAULT_VAD_MODEL_ID: String = "silero-vad-v5"
  * model usage. (A future "VAD" provider could be added if/when the catalog grows.)
  *
  * The Silero VAD model is distributed by the Sherpa ONNX project as a single .onnx file
- * (no archive). The download URL is therefore not a tar.bz2; the integrator should
- * confirm the hash by downloading once before relying on the entry. An empty
- * [VoiceModelFile.sha256sum] is treated as "skip verification" by [ChecksumVerifier].
+ * (no archive), so the entry uses [ArchiveFormat.SINGLE_FILE] to opt out of the default
+ * tar.bz2 extract step. An empty [VoiceModelFile.sha256sum] is treated as "skip
+ * verification" by [ChecksumVerifier]; the integrator should confirm the hash by
+ * downloading once before relying on the entry.
  */
 val SUPPORTED_VAD_MODELS: Map<String, VoiceModel> = mapOf(
     DEFAULT_VAD_MODEL_ID to VoiceModel(
@@ -34,6 +36,7 @@ val SUPPORTED_VAD_MODELS: Map<String, VoiceModel> = mapOf(
             name = "silero_vad",
             url = "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/silero_vad.onnx",
             sha256sum = "",
+            format = ArchiveFormat.SINGLE_FILE,
         ),
         components = listOf(VoiceModelFile(name = "silero_vad.onnx")),
     ),

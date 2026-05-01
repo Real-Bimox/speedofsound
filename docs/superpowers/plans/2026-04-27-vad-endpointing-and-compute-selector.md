@@ -1,5 +1,7 @@
 # VAD Endpointing + CPU/GPU Compute Selector — Implementation Plan
 
+> **Status (2026-05-01, v0.14.0):** Plan complete. VAD-7 download bug closed by adding `ArchiveFormat.SINGLE_FILE` to the model-catalog schema and a `copyRawComponent` path in `ModelFileManager`; first-launch Silero auto-download now lands the file at `models/silero-vad-v5/silero_vad.onnx` instead of failing with `Stream is not in the BZip2 format`. End-to-end smoke test (toggle VAD endpointing → speak → trailing silence auto-stops) pending host-side verification.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Add Silero VAD-driven auto-stop to the recording pipeline (default on) and a CPU/GPU compute selector to Voice preferences, with graceful fallback when the bundled Sherpa JAR is CPU-only.
