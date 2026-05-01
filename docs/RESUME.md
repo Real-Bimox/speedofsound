@@ -96,7 +96,7 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 
 ## 5 — Bazzite-specific gotchas (the painful lessons learned)
 
-1. **Bazzite is immutable** (Fedora 43 atomic). Do not `dnf install` on the host; only inside distrobox/podman/Flatpak/Homebrew. Per `/var/home/bahram/local-repos/readme-lennovo-P920.md` Rule 1.
+1. **Bazzite is immutable** (Fedora 44 atomic — verified 2026-05-01). Do not `dnf install` on the host; only inside distrobox/podman/Flatpak/Homebrew. Per `/var/home/bahram/local-repos/readme-p920.md` Rule 1.
 2. **Fedora's `java-latest-openjdk` is JDK 26** as of April 2026. The project requires exactly JDK 25 (`jvmToolchain(25)` in `buildSrc/.../kotlin-jvm.gradle.kts`); Gradle's auto-detection won't fall back. Solution: install Temurin 25 separately (script does this).
 3. **Whisper Tiny ONNX is Git LFS.** A plain `git clone` puts 133-byte LFS pointers in `core/src/main/resources/models/asr/`, which fails at runtime with "Model file is a Git LFS pointer". Run `git lfs install && git lfs pull` AFTER cloning.
 4. **GStreamer needs runtime plugins, not just `-devel`.** `gstreamer1-devel` + `gstreamer1-plugins-base-devel` only give headers. The actual `autoaudiosrc`/`pipewiresrc`/`pulsesrc` plugins live in `gstreamer1-plugins-base` + `gstreamer1-plugins-good` + `pipewire-gstreamer`. Without them: `Failed to create autoaudiosrc element` at startup.
@@ -199,4 +199,4 @@ bash scripts/setup-distrobox.sh
 - `chore(scope): ...` — tooling/config that doesn't fit elsewhere
 - Fix-up commits append `Addresses code-review feedback on commit <SHA>` so the review trail is grep-able
 
-No `Co-Authored-By` lines (per ground rules in `readme-lennovo-P920.md`).
+No `Co-Authored-By` lines (per ground rules in `readme-p920.md`).
