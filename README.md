@@ -4,7 +4,6 @@
 
 <div align="center">
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)
 
 </div>
@@ -60,12 +59,9 @@ Nexiant Voice stands on the shoulders of these excellent open source projects:
 - [Sherpa ONNX](https://github.com/k2-fsa/sherpa-onnx) — On-device ASR (and more) using the performant ONNX Runtime, with pre-built models for Whisper, Parakeet, Canary, and many other popular models.
 - [Whisper](https://github.com/openai/whisper) — OpenAI's open-source speech recognition model.
 
-Additionally, Nexiant Voice uses Stargate — a JVM library that wraps [XDG Desktop Portals](https://flatpak.github.io/xdg-desktop-portal/docs/index.html) for high-level keyboard simulation on Linux. License credits for all bundled libraries live in `LICENSE` and the JAR `META-INF/`.
+Additionally, Nexiant Voice uses Stargate — a JVM library that wraps [XDG Desktop Portals](https://flatpak.github.io/xdg-desktop-portal/docs/index.html) for high-level keyboard simulation on Linux.
 
 ## Support and Contributions
 
 For project information and support, visit [nexiant.ai](https://nexiant.ai).
 
-## License
-
-MIT — see [LICENSE](LICENSE).

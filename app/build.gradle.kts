@@ -85,7 +85,6 @@ val jpackageCommonArgs = listOf(
 
 // These flags are only valid for installer package types (deb, rpm), not app-image
 val jpackageLinuxInstallerArgs = listOf(
-    "--license-file", rootProject.file("LICENSE").absolutePath,
     "--about-url", "https://nexiant.ai",
     "--linux-app-category", "Utility",
     "--linux-menu-group", "Utility",

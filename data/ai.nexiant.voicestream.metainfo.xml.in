@@ -3,8 +3,8 @@
     <id>ai.nexiant.voicestream</id>
     <name>Nexiant Voice</name>
     <summary>Voice typing for the Linux desktop</summary>
-    <metadata_license>MIT</metadata_license>
-    <project_license>MIT</project_license>
+    <metadata_license>FSFAP</metadata_license>
+    <project_license>LicenseRef-proprietary</project_license>
     <description>
         <p>
             Nexiant Voice is a voice-typing app for the Linux desktop.

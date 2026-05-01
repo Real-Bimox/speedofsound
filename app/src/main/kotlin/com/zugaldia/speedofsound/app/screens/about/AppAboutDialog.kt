@@ -26,7 +26,7 @@ fun buildAboutDialog(): AboutDialog {
     dialog.website = APPLICATION_URL
     dialog.issueUrl = APPLICATION_URL
     dialog.supportUrl = APPLICATION_URL
-    dialog.licenseType = License.MIT_X11
+    dialog.licenseType = License.UNKNOWN
     dialog.copyright = "Copyright (c) 2026 Nexiant"
     dialog.debugInfo = buildDebugInfo()
     dialog.debugInfoFilename = "$APPLICATION_SHORT-debug.txt"
