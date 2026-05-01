@@ -1,11 +1,11 @@
 package com.zugaldia.speedofsound.core
 
-const val APPLICATION_NAME = "VoiceStream"
-const val APPLICATION_ID = "io.voicestream.VoiceStream"
+const val APPLICATION_NAME = "Nexiant Voice"
+const val APPLICATION_ID = "ai.nexiant.voicestream"
 const val APPLICATION_SHORT = "voicestream"
-const val APPLICATION_URL = "https://www.voicestream.io"
-const val APPLICATION_URL_KEYBOARD_SHORTCUT = "$APPLICATION_URL/keyboard-shortcut/"
-const val APPLICATION_URL_TROUBLESHOOTING = "$APPLICATION_URL/troubleshooting/"
+const val APPLICATION_URL = "https://nexiant.ai"
+const val APPLICATION_URL_KEYBOARD_SHORTCUT = APPLICATION_URL
+const val APPLICATION_URL_TROUBLESHOOTING = APPLICATION_URL
 
 const val ANTHROPIC_ENVIRONMENT_VARIABLE = "ANTHROPIC_API_KEY"
 const val GOOGLE_ENVIRONMENT_VARIABLE = "GOOGLE_API_KEY"

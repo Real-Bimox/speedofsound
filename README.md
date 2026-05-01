@@ -1,23 +1,17 @@
 <div align="center">
-  <img src="assets/logo/logo-square-512.png" width="250" alt="Speed of Sound logo">
+  <img src="assets/logo/logo-square-512.png" width="160" alt="Nexiant Voice logo">
 </div>
 
 <div align="center">
 
-[![Version](https://img.shields.io/github/v/release/zugaldia/speedofsound)](https://github.com/zugaldia/speedofsound/releases)
-[![Build](https://github.com/zugaldia/speedofsound/actions/workflows/build.yml/badge.svg)](https://github.com/zugaldia/speedofsound/actions/workflows/build.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 ![Platform](https://img.shields.io/badge/platform-Linux-lightgrey)
 
 </div>
 
-# Speed of Sound
+# Nexiant Voice
 
-Voice typing for the Linux desktop:
-
-<div align="center">
-  <img src="docs/assets/videos/demo-light.gif" alt="Speed of Sound typing into a text editor">
-</div>
+Voice typing for the Linux desktop.
 
 ## Features
 
@@ -28,76 +22,50 @@ Voice typing for the Linux desktop:
 - Works out of the box with a built-in multilingual Whisper model. Download additional models from within the app to improve accuracy and language coverage.
 - *Optional* text polishing with LLMs (Anthropic, Google, OpenAI), with support for a custom context and vocabulary.
 - Supports self-hosted services like vLLM, Ollama, and llama.cpp (cloud services supported but not required).
+- *Optional* GPU acceleration via Sherpa's CUDA build (CUDA 12 / cuDNN 9), with graceful CPU fallback when GPU isn't available.
 
-## Install (Linux AppImage, recommended for VoiceStream fork)
+## Install (Linux AppImage)
 
-VoiceStream ships as a self-contained AppImage. No system installation, no admin rights, no system Java required — copy and run.
+Nexiant Voice ships as a self-contained AppImage. No system installation, no admin rights, no system Java required — copy and run.
 
 ```bash
 # CPU build (works on any glibc-compatible Linux x86_64)
-wget https://github.com/Real-Bimox/speedofsound/releases/download/v0.15.0/voicestream-0.15.0-x86_64.AppImage
-chmod +x voicestream-0.15.0-x86_64.AppImage
-./voicestream-0.15.0-x86_64.AppImage
+chmod +x voicestream-0.16.0-x86_64.AppImage
+./voicestream-0.16.0-x86_64.AppImage
 ```
 
-For NVIDIA GPU acceleration (CUDA 12 / cuDNN 9), grab the `-gpu` variant. Requires NVIDIA driver R535+ AND CUDA 12 + cuDNN 9 installed on the host (Sherpa loads them at runtime); falls back to CPU silently otherwise.
+For NVIDIA GPU acceleration, grab the `-gpu` variant. Requires NVIDIA driver R535+ AND CUDA 12 + cuDNN 9 installed on the host; falls back to CPU silently otherwise.
 
 ```bash
-wget https://github.com/Real-Bimox/speedofsound/releases/download/v0.15.0/voicestream-0.15.0-gpu-x86_64.AppImage
-chmod +x voicestream-0.15.0-gpu-x86_64.AppImage
-./voicestream-0.15.0-gpu-x86_64.AppImage
+chmod +x voicestream-0.16.0-gpu-x86_64.AppImage
+./voicestream-0.16.0-gpu-x86_64.AppImage
 ```
 
-To build from source, see [docs/RESUME.md](docs/RESUME.md) and `make appimage` / `make appimage-gpu`.
+## Build from source
 
-## Getting Started (upstream Speed of Sound)
+See [docs/RESUME.md](docs/RESUME.md) for the full setup. Quick path on a Fedora-flavored Linux:
 
-<div style="display: flex; gap: 10px; align-items: center;">
-    <a href="https://flathub.org/en/apps/io.speedofsound.SpeedOfSound">
-      <img width="240" alt="Get it on Flathub" src="https://flathub.org/api/badge?locale=en"/>
-    </a>
-    <a href="https://snapcraft.io/speedofsound">
-      <img width="260" alt="Get it from the Snap Store" src=https://snapcraft.io/en/dark/install.svg />
-    </a>
-</div>
-
-The easiest and recommended way to install upstream Speed of Sound is from
-[Flathub](https://flathub.org/en/apps/io.speedofsound.SpeedOfSound) or from the
-[Snap Store](https://snapcraft.io/speedofsound).
-Alternatively, AppImage, Deb, and RPM packages are also available from the [releases page](https://github.com/zugaldia/speedofsound/releases/latest).
-
-For initial configuration, troubleshooting, and other resources, visit [speedofsound.io](https://speedofsound.io).
-
-## Contributing
-
-To build the project from source and learn how to contribute, see [CONTRIBUTING.md](CONTRIBUTING.md).
+```bash
+bash scripts/setup-distrobox.sh
+distrobox enter voicestream-dev -- bash -lc 'cd $(pwd) && make run'        # GUI
+distrobox enter voicestream-dev -- bash -lc 'cd $(pwd) && make appimage'   # CPU AppImage
+distrobox enter voicestream-dev -- bash -lc 'cd $(pwd) && make appimage-gpu' # GPU AppImage
+```
 
 ## Built with
 
-Speed of Sound stands on the shoulders of these excellent open source projects:
+Nexiant Voice stands on the shoulders of these excellent open source projects:
 
-- [Java-GI](https://codeberg.org/java-gi/java-gi) — GTK/GNOME bindings for Java, enabling access to native libraries
-  (including LibAdwaita and GStreamer) via the modern Panama framework.
-- [Sherpa ONNX](https://github.com/k2-fsa/sherpa-onnx) — On-device ASR (and more) using the performant ONNX Runtime,
-  with pre-built models for Whisper, Parakeet, Canary, and many other popular models.
+- [Java-GI](https://codeberg.org/java-gi/java-gi) — GTK/GNOME bindings for Java, enabling access to native libraries (including LibAdwaita and GStreamer) via the modern Panama framework.
+- [Sherpa ONNX](https://github.com/k2-fsa/sherpa-onnx) — On-device ASR (and more) using the performant ONNX Runtime, with pre-built models for Whisper, Parakeet, Canary, and many other popular models.
 - [Whisper](https://github.com/openai/whisper) — OpenAI's open-source speech recognition model.
-  Its release transformed the on-device ASR landscape.
 
-Additionally, Speed of Sound uses [Stargate](https://github.com/zugaldia/stargate), a companion project by the same
-author that provides JVM applications with high-level access to [XDG Desktop Portals](https://flatpak.github.io/xdg-desktop-portal/docs/index.html)
-on Linux. Stargate, in turn, depends on the fantastic [dbus-java](https://github.com/hypfvieh/dbus-java) project.
+Additionally, Nexiant Voice uses [Stargate](https://github.com/zugaldia/stargate) — a companion project that provides JVM applications with high-level access to [XDG Desktop Portals](https://flatpak.github.io/xdg-desktop-portal/docs/index.html) on Linux. Stargate, in turn, depends on the [dbus-java](https://github.com/hypfvieh/dbus-java) project.
 
 ## Support and Contributions
 
-If you run into any issues, have questions, or need troubleshooting help, please open a ticket on the
-[GitHub issues page](https://github.com/zugaldia/speedofsound/issues). Pull requests are also welcome.
+For project information and support, visit [nexiant.ai](https://nexiant.ai).
 
-When reporting an issue, please include the debug information from the About dialog's Troubleshooting
-section, it helps identify your runtime environment and system configuration.
+## License
 
-There are several ideas already tracked as tickets to improve the project. Everything planned on the
-roadmap has a corresponding issue. If you'd like to contribute, please use those tickets to guide your
-work. You can also use GitHub emoji reactions on issues to vote for the ones that matter most to you,
-which helps with prioritization.
-
-If you find Speed of Sound useful, consider [sponsoring this work](https://github.com/sponsors/zugaldia).
+MIT — see [LICENSE](LICENSE).

@@ -10,7 +10,7 @@
 
 **Tech Stack:** Kotlin 2.3.10, JVM 25, Gradle 9.4.1, Sherpa ONNX 1.12.33 (bundled JAR with `Vad`, `SileroVadModelConfig`, `OfflineRecognizer`), kotlinx.coroutines `SharedFlow`, kotlin.test/JUnit Platform, detekt static analysis.
 
-**Conventions to honor (from `CLAUDE.md`):**
+**Conventions to honor (from `AGENTS.md`):**
 - `Result<T>` + `runCatching` for error paths
 - Coroutines on `Dispatchers.IO` for blocking work
 - No `!!` operator

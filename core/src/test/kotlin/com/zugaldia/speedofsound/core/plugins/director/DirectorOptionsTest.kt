@@ -115,7 +115,7 @@ class DirectorOptionsTest {
 
     @Test
     fun `DEFAULT_VOCABULARY contains expected terms`() {
-        assertTrue(DEFAULT_VOCABULARY.contains("VoiceStream"))
+        assertTrue(DEFAULT_VOCABULARY.contains("Nexiant Voice"))
         assertTrue(DEFAULT_VOCABULARY.contains("Linux"))
         assertTrue(DEFAULT_VOCABULARY.contains("GNOME"))
         assertEquals(3, DEFAULT_VOCABULARY.size)

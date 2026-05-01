@@ -1,10 +1,10 @@
-# Welcome to Speed of Sound
+# Welcome to Nexiant Voice
 
 Voice typing for the Linux desktop:
 
 <div align="center">
-  <img src="assets/videos/demo-light.gif#only-light" alt="Speed of Sound typing into a text editor">
-  <img src="assets/videos/demo-dark.gif#only-dark" alt="Speed of Sound typing into a text editor">
+  <img src="assets/videos/demo-light.gif#only-light" alt="Nexiant Voice typing into a text editor">
+  <img src="assets/videos/demo-dark.gif#only-dark" alt="Nexiant Voice typing into a text editor">
 </div>
 
 ## Features

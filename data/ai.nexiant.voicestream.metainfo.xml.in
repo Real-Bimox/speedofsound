@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2026 Antonio Zugaldia -->
 <component type="desktop-application">
-    <id>io.voicestream.VoiceStream</id>
-    <name>VoiceStream</name>
+    <id>ai.nexiant.voicestream</id>
+    <name>Nexiant Voice</name>
     <summary>Voice typing for the Linux desktop</summary>
     <metadata_license>MIT</metadata_license>
     <project_license>MIT</project_license>
     <description>
         <p>
-            VoiceStream is a voice-typing app for the Linux desktop.
+            Nexiant Voice is a voice-typing app for the Linux desktop.
         </p>
         <p>
             By default, transcription runs entirely on-device, so no audio ever leaves your machine.
@@ -25,19 +24,19 @@
         <p>See the README on the project page for installation and getting-started instructions.</p>
     </description>
 
-    <url type="homepage">https://github.com/Real-Bimox/speedofsound</url>
-    <url type="vcs-browser">https://github.com/Real-Bimox/speedofsound</url>
-    <url type="bugtracker">https://github.com/Real-Bimox/speedofsound/issues</url>
-    <url type="contribute">https://github.com/Real-Bimox/speedofsound/blob/main/CONTRIBUTING.md</url>
-    <url type="help">https://github.com/Real-Bimox/speedofsound/blob/main/docs/support.md</url>
-    <url type="faq">https://github.com/Real-Bimox/speedofsound/blob/main/docs/faq.md</url>
+    <url type="homepage">https://nexiant.ai</url>
+    <url type="vcs-browser">https://nexiant.ai</url>
+    <url type="bugtracker">https://nexiant.ai</url>
+    <url type="contribute">https://nexiant.ai</url>
+    <url type="help">https://nexiant.ai</url>
+    <url type="faq">https://nexiant.ai</url>
 
-    <developer id="io.github.real-bimox">
-        <name>Real-Bimox</name>
+    <developer id="ai.nexiant">
+        <name>Nexiant</name>
     </developer>
 
     <content_rating type="oars-1.1" />
-    <launchable type="desktop-id">io.voicestream.VoiceStream.desktop</launchable>
+    <launchable type="desktop-id">ai.nexiant.voicestream.desktop</launchable>
 
     <!-- Screenshots will be re-added once the repo hosts asset images. -->
     <!--
@@ -52,7 +51,7 @@
 
     <releases>
         <release version="0.13.0" date="2026-04-21">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.13.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.13.0</url>
             <description>
                 <p>
                     Added a system tray icon with Start/Stop Listening, Open App, and Quit
@@ -67,7 +66,7 @@
             </description>
         </release>
         <release version="0.12.0" date="2026-04-11">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.12.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.12.0</url>
             <description>
                 <p>
                     Added support for NVIDIA Canary and Parakeet ASR model families alongside
@@ -83,7 +82,7 @@
             </description>
         </release>
         <release version="0.11.0" date="2026-03-29">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.11.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.11.0</url>
             <description>
                 <p>
                     Added Start and Stop buttons to the main window for easier control without a
@@ -96,7 +95,7 @@
             </description>
         </release>
         <release version="0.10.1" date="2026-03-25">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.10.1</url>
+            <url type="details">https://nexiant.ai/releases/v0.10.1</url>
             <description>
                 <p>
                     Fixed a bug where the built-in Tiny model was unavailable in the Snap package
@@ -106,7 +105,7 @@
             </description>
         </release>
         <release version="0.10.0" date="2026-03-25">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.10.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.10.0</url>
             <description>
                 <p>
                     Improved the welcome carousel with per-page images and cleaner copy; keyboard
@@ -119,7 +118,7 @@
             </description>
         </release>
         <release version="0.9.0" date="2026-03-22">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.9.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.9.0</url>
             <description>
                 <p>
                     Added global keyboard shortcuts: set up a system-wide shortcut (Super+Z by default)
@@ -137,7 +136,7 @@
             </description>
         </release>
         <release version="0.8.0" date="2026-03-11">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.8.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.8.0</url>
             <description>
                 <p>
                     The app now starts faster with async plugin initialization — the main window
@@ -152,7 +151,7 @@
             </description>
         </release>
         <release version="0.7.0" date="2026-03-06">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.7.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.7.0</url>
             <description>
                 <p>
                     Added Flatpak and Snap distribution packages with proper desktop integration
@@ -164,7 +163,7 @@
             </description>
         </release>
         <release version="0.6.0" date="2026-03-04">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.6.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.6.0</url>
             <description>
                 <p>
                     Added Gemini 3.1 Pro and Gemini Flash Lite as available cloud text models,
@@ -175,7 +174,7 @@
             </description>
         </release>
         <release version="0.5.0" date="2026-02-24">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.5.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.5.0</url>
             <description>
                 <p>
                     New Import/Export page in Preferences lets you back up your full configuration
@@ -186,7 +185,7 @@
             </description>
         </release>
         <release version="0.4.0" date="2026-02-23">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.4.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.4.0</url>
             <description>
                 <p>
                     Fixed two crashes: one on startup caused by a threading issue in the main view,
@@ -198,7 +197,7 @@
             </description>
         </release>
         <release version="0.3.0" date="2026-02-22">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.3.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.3.0</url>
             <description>
                 <p>
                     Lowered the minimum required JDK from 25 to 22, making the app easier to run on
@@ -207,7 +206,7 @@
             </description>
         </release>
         <release version="0.2.0" date="2026-02-22">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.2.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.2.0</url>
             <description>
                 <p>
                     Fixed a crash on fresh installations where no ASR model had been configured yet.
@@ -218,10 +217,10 @@
             </description>
         </release>
         <release version="0.1.0" date="2026-02-22">
-            <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/v0.1.0</url>
+            <url type="details">https://nexiant.ai/releases/v0.1.0</url>
             <description>
                 <p>
-                    First release of VoiceStream. Captures microphone audio, transcribes it
+                    First release. Captures microphone audio, transcribes it
                     on-device using Whisper via Sherpa ONNX, and types the result into any focused
                     application using XDG Desktop Portal keyboard simulation. Optional LLM text
                     polishing is supported via Anthropic, Google, OpenAI, and compatible self-hosted

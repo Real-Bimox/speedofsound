@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stand up a fully-working VoiceStream dev/run environment on bazzite (immutable host).
+# Stand up a fully-working Nexiant Voice dev/run environment on bazzite (immutable host).
 #
 # Idempotent — safe to re-run. Creates a Fedora 43 distrobox named "voicestream-dev"
 # with the complete toolchain: Adoptium Temurin JDK 25, GTK4, libadwaita, GStreamer

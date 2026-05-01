@@ -1,12 +1,12 @@
 ---
 name: Bug report
-about: Report a problem with Speed of Sound
+about: Report a problem with Nexiant Voice
 labels: bug
 ---
 
 ## Pre-submission checklist
 
-- [ ] I have read the [troubleshooting documentation](https://www.speedofsound.io/troubleshooting/) and my issue is not covered there.
+- [ ] I have read the [troubleshooting documentation](https://nexiant.ai) and my issue is not covered there.
 
 ## Description
 

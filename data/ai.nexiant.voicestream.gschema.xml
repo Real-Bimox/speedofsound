@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist gettext-domain="voicestream">
-  <schema id="io.voicestream.VoiceStream" path="/io/voicestream/VoiceStream/">
+  <schema id="ai.nexiant.voicestream" path="/ai/nexiant/voicestream/">
 
     <key name="portals-restore-token" type="s">
       <default>''</default>

@@ -5,9 +5,9 @@ package com.zugaldia.speedofsound.app.settings
  *
  * It can be managed from the CLI. Examples:
  *
- * gsettings list-keys io.voicestream.VoiceStream
- * gsettings get io.voicestream.VoiceStream language
- * gsettings set io.voicestream.VoiceStream language en
+ * gsettings list-keys ai.nexiant.voicestream
+ * gsettings get ai.nexiant.voicestream language
+ * gsettings set ai.nexiant.voicestream language en
  *
  */
 
@@ -38,7 +38,7 @@ class GioStore(val schemaId: String = APPLICATION_ID): SettingsStore {
         if (settingsSchema?.hasKey(key) != true) {
             // We throw the exception ourselves because otherwise the GLib-GIO-ERROR
             // is not caught and crashes the app. Example:
-            // GLib-GIO-ERROR **: Settings schema 'io.voicestream.VoiceStream' does not contain a key named 'x'
+            // GLib-GIO-ERROR **: Settings schema 'ai.nexiant.voicestream' does not contain a key named 'x'
             throw IllegalArgumentException("Schema ($schemaId) or key ($key) not found")
         }
     }

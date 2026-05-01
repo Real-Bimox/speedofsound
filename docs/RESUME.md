@@ -1,6 +1,8 @@
-# VoiceStream — Session Resume Guide
+# Nexiant Voice — Session Resume Guide
 
-**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.15.0`. **Last verified working commit:** `82f20c5` (v0.15.0: VAD-15 + GPU JAR + AppImage; `:core:check :cli:check :app:compileKotlin :app:detekt` green for both CPU and `-Pvoicestream.gpu=true`; both `make appimage` and `make appimage-gpu` produce self-contained AppImages, 201 MB and 423 MB respectively).
+**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.16.0`. **Last verified working commit:** TBD on next push (v0.16.0: full rebrand to Nexiant Voice; App-ID changed `io.voicestream.VoiceStream` → `ai.nexiant.voicestream`; URLs all point at `https://nexiant.ai`; logo replaced with the Nexiant family icon; `:core:check :cli:check :app:compileKotlin :app:detekt` green; CPU AppImage builds via `make appimage`).
+
+> **Rebrand notes:** The display name is **Nexiant Voice**. The internal project identifier is **voicestream** (binary name, distrobox name, AppImage filename, repo path — kept stable). The Java source package `com.zugaldia.speedofsound.*` is preserved unchanged so future upstream merges still work cleanly. After upgrading to v0.16.0 from any earlier version, GSettings stored under the old `io.voicestream.VoiceStream` schema are abandoned (the new schema is `ai.nexiant.voicestream`); reconfigure on first launch.
 
 This document captures everything needed to pick up VoiceStream development after a context loss. Read this first; then drill into the spec/plan docs and `git log` for detail.
 
@@ -108,11 +110,17 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 
 ## 6 — Open issues / next steps (in priority order)
 
+### ✓ Closed in v0.16.0
+- Full rebrand to **Nexiant Voice**. Display name, App-ID (`ai.nexiant.voicestream`), all user-facing URLs (→ `https://nexiant.ai`), logo (Nexiant family icon from `Nexiant-Generica/public/icon.png`).
+- App-ID files renamed: `data/ai.nexiant.voicestream.{desktop.in,gschema.xml,metainfo.xml.in,service.in}`, `data/icons/hicolor/scalable/apps/ai.nexiant.voicestream.svg`, `ai.nexiant.voicestream.yml` (Flatpak manifest).
+- `CLAUDE.md` → `AGENTS.md`; all "Claude Code" / "claude.ai" tool-attribution references stripped from repo (Anthropic LLM model display strings stay because they're third-party product names).
+- Obsolete `scripts/rebrand.sh` (Speed of Sound → Sound Of Stream relic) removed.
+- AppImage filename pattern: `voicestream-0.16.0-x86_64.AppImage` (binary name `voicestream` retained per project-identifier convention).
+
 ### ✓ Closed in v0.15.0
 - VAD-15: dedicated `VadProvider` enum; `VoiceModel.provider` widened to `SelectableProvider` so VAD models stop borrowing `AsrProvider.SHERPA_WHISPER`.
 - GPU Sherpa native-lib JAR: `scripts/build-gpu-jar.sh` packages the CUDA 12 / cuDNN 9 GPU bundle; `-Pvoicestream.gpu=true` selects it.
 - Self-contained AppImage distribution: `make appimage` → CPU (~201 MB), `make appimage-gpu` → GPU (~423 MB).
-- Rebrand bug fix in `data/io.voicestream.VoiceStream.metainfo.xml.in` (unreachable `voicestream.io` URLs and wrong fork repo path).
 
 ### High value, small effort
 *(none currently)*

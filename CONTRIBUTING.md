@@ -1,15 +1,13 @@
-# Contributing to Speed of Sound
+# Contributing to Nexiant Voice
 
-This document describes how to build Speed of Sound from source. Most users don't need to do this,
-you can install the application using one of the [pre-built packages](https://www.speedofsound.io/getting-started/).
-Building from source is necessary however when working on a new feature or bug fix. Contributions are welcome!
+This document describes how to build Nexiant Voice from source. Most users don't need to do this — you can install the application using one of the [pre-built AppImages](https://nexiant.ai). Building from source is necessary, however, when working on a new feature or bug fix. Contributions are welcome!
 
-Use [GitHub issues](https://github.com/zugaldia/speedofsound/issues) to guide and track your work.
+For project tracking and support, visit [nexiant.ai](https://nexiant.ai).
 
 The use of coding agents during development is accepted, with the understanding that
 regardless of how a contribution is created, the author is ultimately responsible for its quality, correctness, and
 adherence to best practices and the project's established patterns. For more information, see the
-[FAQ](https://www.speedofsound.io/faq/).
+[FAQ](https://nexiant.ai).
 
 ## Building from Source
 
@@ -45,7 +43,7 @@ Make sure Git LFS is installed before cloning, otherwise the model files will be
 
 ```bash
 git lfs install
-git clone https://github.com/zugaldia/speedofsound.git
+git clone <your-fork-or-mirror-url>.git
 ```
 
 If you already cloned without LFS, run `git lfs pull` to download the missing files.
@@ -59,7 +57,7 @@ make build        # Build all modules
 make run          # Clean and run the GUI app in dev mode
 make check        # Run all checks including detekt static analysis
 make clean        # Clean build artifacts
-make shadow-build # Create fat JAR at app/build/libs/speedofsound.jar
+make shadow-build # Create fat JAR at app/build/libs/voicestream.jar
 make shadow-run   # Build and run the fat JAR
 ```
 
@@ -78,7 +76,7 @@ make snapcraft-pack  # Build the snap locally
 make snap-install    # Install the locally built snap
 ```
 
-Then simply run the application with the `speedofsound` command. To uninstall:
+Then simply run the application with the `voicestream` command. To uninstall:
 
 ```bash
 make snap-remove     # Uninstall the locally installed snap

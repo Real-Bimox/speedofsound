@@ -1,8 +1,8 @@
-site_name: VoiceStream
-site_url: https://voicestream.io
-site_author: Antonio Zugaldia
+site_name: Nexiant Voice
+site_url: https://nexiant.ai
+site_author: Nexiant
 site_description: Voice typing for the Linux desktop
-repo_url: https://github.com/zugaldia/voicestream
+repo_url: https://nexiant.ai
 theme:
   name: material
   logo: assets/logo-square-512.png
@@ -43,12 +43,8 @@ nav:
   - Troubleshooting: troubleshooting.md
   - FAQ: faq.md
   - Support: support.md
-copyright: Copyleft &copy; 2026 Antonio Zugaldia
+copyright: Copyright &copy; 2026 Nexiant
 extra:
   social:
-    - icon: fontawesome/brands/github
-      link: https://github.com/zugaldia
-    - icon: fontawesome/brands/bluesky
-      link: https://bsky.app/profile/zugaldia.com
     - icon: fontawesome/solid/globe
-      link: https://zugaldia.com
+      link: https://nexiant.ai

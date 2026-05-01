@@ -90,7 +90,7 @@ done
 mkdir -p "$JAR_STAGE/META-INF"
 cat > "$JAR_STAGE/META-INF/MANIFEST.MF" << 'EOM'
 Manifest-Version: 1.0
-Created-By: VoiceStream build-gpu-jar.sh
+Created-By: Nexiant Voice build-gpu-jar.sh
 EOM
 
 mkdir -p "$LIBS_DIR"

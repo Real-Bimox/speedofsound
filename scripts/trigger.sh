@@ -11,6 +11,6 @@
 
 gdbus call \
     --session \
-    --dest io.voicestream.VoiceStream \
-    --object-path /io/voicestream/VoiceStream \
+    --dest ai.nexiant.voicestream \
+    --object-path /ai/nexiant/voicestream \
     --method org.gtk.Actions.Activate "trigger" [] {}

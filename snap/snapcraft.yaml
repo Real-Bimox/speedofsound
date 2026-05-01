@@ -14,12 +14,12 @@ base: core24
 grade: stable
 confinement: strict
 
-title: VoiceStream
-contact: https://github.com/zugaldia/voicestream
-donation: https://github.com/zugaldia/voicestream
-source-code: https://github.com/zugaldia/voicestream
-website: https://www.voicestream.io
-issues: https://github.com/zugaldia/voicestream/issues
+title: Nexiant Voice
+contact: https://nexiant.ai
+donation: https://nexiant.ai
+source-code: https://nexiant.ai
+website: https://nexiant.ai
+issues: https://nexiant.ai
 license: MIT
 
 lint:
@@ -50,7 +50,7 @@ parts:
     build-environment:
       - JAVA_HOME: /usr/lib/jvm/java-25-openjdk-amd64
       - PATH: /usr/lib/jvm/java-25-openjdk-amd64/bin:$PATH
-    parse-info: [ usr/share/metainfo/io.voicestream.VoiceStream.metainfo.xml ]
+    parse-info: [ usr/share/metainfo/ai.nexiant.voicestream.metainfo.xml ]
   alsa-conf:
     plugin: dump
     source: snap
@@ -62,14 +62,14 @@ slots:
   voicestream:
     interface: dbus
     bus: session
-    name: io.voicestream.VoiceStream
+    name: ai.nexiant.voicestream
 
 apps:
   voicestream:
     extensions: [ gnome ]
     command: usr/bin/voicestream
-    common-id: io.voicestream.VoiceStream
-    desktop: usr/share/applications/io.voicestream.VoiceStream.desktop
+    common-id: ai.nexiant.voicestream
+    desktop: usr/share/applications/ai.nexiant.voicestream.desktop
     slots:
       - voicestream
     plugs:

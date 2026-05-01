@@ -1,9 +1,9 @@
 # Support
 
-![Speed of Sound](assets/logo-square-512.png){ width=250 }
+![Nexiant Voice](assets/logo-square-512.png){ width=250 }
 
 If you run into any issues, have questions, or need troubleshooting help, please open a ticket on the
-[GitHub issues page](https://github.com/zugaldia/speedofsound/issues). Pull requests are also welcome.
+[GitHub issues page](https://nexiant.ai/issues). Pull requests are also welcome.
 
 ## Including debug information
 
@@ -17,11 +17,11 @@ directly from that page. Please paste it into your issue report.
 The debug information looks like this:
 
 ```
-Speed of Sound v1.2.3
+Nexiant Voice v1.2.3
 
 Runtime: JVM
-Data directory: /home/user/.local/share/speedofsound
-Temporary directory: /home/user/.local/share/speedofsound/tmp
+Data directory: /home/user/.local/share/voicestream
+Temporary directory: /home/user/.local/share/voicestream/tmp
 
 OS: Linux 6.18.7-76061807-generic
 Architecture: amd64
@@ -38,4 +38,4 @@ which helps with prioritization.
 
 ## Sponsorship
 
-If you find Speed of Sound useful, consider [sponsoring this work](https://github.com/sponsors/zugaldia).
+If you find Nexiant Voice useful, consider [sponsoring this work](https://nexiant.ai).

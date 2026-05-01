@@ -1,4 +1,4 @@
-id: io.voicestream.VoiceStream
+id: ai.nexiant.voicestream
 runtime: org.gnome.Platform
 runtime-version: '50'
 
@@ -32,7 +32,7 @@ modules:
       - type: dir # During development
         path: .
 #      - type: git # For actual releases
-#        url: https://github.com/zugaldia/voicestream.git
+#        url: https://nexiant.ai
 #        tag: v0.x.0
 #        commit: HASH # Use: git rev-list -n 1 v0.x.0
 #        disable-lfs: false # (false is the default, making it explicit to ensure we bundle the Whisper model files)

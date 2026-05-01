@@ -83,7 +83,7 @@ class MainWindow(
 
         content = ToolbarView().apply {
             // Explicitly request minimize and close buttons. Some desktop setups (e.g. Fedora default)
-            // omit the minimize button, which confuses users. Unlike most apps, VoiceStream must
+            // omit the minimize button, which confuses users. Unlike most apps, Nexiant Voice must
             // be minimized (or hidden) before the user can type into another application.
             // https://gnome.pages.gitlab.gnome.org/libadwaita/doc/main/property.HeaderBar.decoration-layout.html
             addTopBar(HeaderBar().apply { decorationLayout = ":minimize,close"; packEnd(buildMenuButton()) })

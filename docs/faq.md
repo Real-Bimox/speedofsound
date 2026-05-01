@@ -17,8 +17,8 @@ On-device remains the recommended starting point for everyone.
 
 ## Does it work on Wayland? How about X11?
 
-Yes to both. Under the hood, Speed of Sound uses [XDG Desktop Portals](https://flatpak.github.io/xdg-desktop-portal/docs/)
-for keyboard input, which works on both X11 and Wayland (powered by the [Stargate library](https://github.com/zugaldia/stargate/)
+Yes to both. Under the hood, Nexiant Voice uses [XDG Desktop Portals](https://flatpak.github.io/xdg-desktop-portal/docs/)
+for keyboard input, which works on both X11 and Wayland (powered by the [Stargate library](https://nexiant.ai/stargate/)
 by the same author). On the first launch you will be prompted to grant the app permission to type on your behalf.
 You need to approve that prompt for dictation to work.
 
@@ -59,7 +59,7 @@ input device in your system sound settings.
 ## Why do I need to set up a trigger script for the global keyboard shortcut?
 
 The [XDG Desktop Global Shortcuts Portal](https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.GlobalShortcuts.html)
-would allow Speed of Sound to register a global shortcut automatically, but it is still not widely supported across
+would allow Nexiant Voice to register a global shortcut automatically, but it is still not widely supported across
 desktop environments. Until it is, the `trigger.sh` script provides a manual alternative that works with whatever
 shortcut system your desktop already has. We know it is awkward and plan to make this step optional once portal
 support improves.
@@ -76,12 +76,12 @@ in favor of ease of use.
 Audio and transcriptions are never written to disk. They are discarded as soon as they are processed.
 In the future we may add a history or statistics feature, but that is not currently in place.
 Settings are stored using GSettings unless you run the JAR standalone, in which case they are stored
-in a properties file, typically under `$HOME/.local/share/speedofsound/speedofsound.properties`.
+in a properties file, typically under `$HOME/.local/share/voicestream/voicestream.properties`.
 
 File storage follows standard desktop conventions to work correctly in Flatpak and Snap environments.
 Downloaded models are stored under `$SNAP_USER_COMMON` (when running as a Snap),
-or `$XDG_DATA_HOME/speedofsound` (when that variable is set), falling back to
-`$HOME/.local/share/speedofsound`.
+or `$XDG_DATA_HOME/voicestream` (when that variable is set), falling back to
+`$HOME/.local/share/voicestream`.
 
 ## Was this application "vibe-coded"?
 
@@ -89,7 +89,7 @@ If you are asking whether this application was cobbled together in a couple of e
 an LLM and hoping for the best, the answer is no. If you are asking whether a coding agent was used to assist during
 development, the answer is yes.
 
-Speed of Sound was built with a deliberate focus on maintainability and correctness, supported by
+Nexiant Voice was built with a deliberate focus on maintainability and correctness, supported by
 a growing test suite. Any AI-generated code was reviewed before being included, if only because the author relies on
 this application for everyday use and wants all users to have the same reliable experience he expects for himself.
 In other words, any bugs or bad design decisions are the author's fault.
@@ -100,13 +100,13 @@ not an excuse to take shortcuts. In fact, the opposite is true.
 
 ## How can I support this project?
 
-If you find Speed of Sound useful, consider [sponsoring this work](https://github.com/sponsors/zugaldia).
+If you find Nexiant Voice useful, consider [sponsoring this work](https://nexiant.ai).
 You can also contribute code, report bugs, or vote on issues.
 
 ## What do I do if I have another question not answered here?
 
 If you run into any issues, have questions, or need troubleshooting help, please open a ticket on the
-[GitHub issues page](https://github.com/zugaldia/speedofsound/issues). Pull requests are also welcome.
+[GitHub issues page](https://nexiant.ai/issues). Pull requests are also welcome.
 
 There are several ideas already tracked as tickets to improve the project. Everything planned on the
 roadmap has a corresponding issue. If you'd like to contribute, please use those tickets to guide your

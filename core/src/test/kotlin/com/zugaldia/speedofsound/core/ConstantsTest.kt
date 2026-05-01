@@ -14,7 +14,7 @@ class ConstantsTest {
     @Test
     fun `application ID follows reverse domain format`() {
         assertTrue(APPLICATION_ID.contains('.'))
-        assertTrue(APPLICATION_ID.startsWith("io."))
+        assertTrue(APPLICATION_ID.startsWith("ai.nexiant."))
     }
 
     @Test

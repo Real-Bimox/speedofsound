@@ -1,5 +1,5 @@
 fs = import('fs')
-desktop_file = fs.copyfile('io.voicestream.VoiceStream.desktop.in', 'io.voicestream.VoiceStream.desktop',
+desktop_file = fs.copyfile('ai.nexiant.voicestream.desktop.in', 'ai.nexiant.voicestream.desktop',
   install: true,
   install_dir: get_option('datadir') / 'applications'
 )
@@ -7,7 +7,7 @@ desktop_file = fs.copyfile('io.voicestream.VoiceStream.desktop.in', 'io.voicestr
 desktop_utils = find_program('desktop-file-validate', required: false, disabler: true)
 test('Validate desktop file', desktop_utils, args: [desktop_file])
 
-appstream_file = fs.copyfile('io.voicestream.VoiceStream.metainfo.xml.in', 'io.voicestream.VoiceStream.metainfo.xml',
+appstream_file = fs.copyfile('ai.nexiant.voicestream.metainfo.xml.in', 'ai.nexiant.voicestream.metainfo.xml',
   install: true,
   install_dir: get_option('datadir') / 'metainfo'
 )
@@ -17,7 +17,7 @@ test('Validate appstream file', appstreamcli,
      args: ['validate', '--no-net', '--explain', appstream_file]
 )
 
-install_data('io.voicestream.VoiceStream.gschema.xml',
+install_data('ai.nexiant.voicestream.gschema.xml',
   install_dir: get_option('datadir') / 'glib-2.0' / 'schemas'
 )
 
@@ -29,8 +29,8 @@ test('Validate schema file', compile_schemas,
 service_conf = configuration_data()
 service_conf.set('bindir', get_option('prefix') / get_option('bindir'))
 configure_file(
-          input: 'io.voicestream.VoiceStream.service.in',
-         output: 'io.voicestream.VoiceStream.service',
+          input: 'ai.nexiant.voicestream.service.in',
+         output: 'ai.nexiant.voicestream.service',
   configuration: service_conf,
     install_dir: get_option('datadir') / 'dbus-1' / 'services'
 )

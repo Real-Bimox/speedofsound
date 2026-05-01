@@ -1,11 +1,11 @@
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=VoiceStream
+Name=Nexiant Voice
 Comment=Voice typing for the Linux desktop
 Categories=Utility;Accessibility;
 Keywords=voice;typing;dictation;transcription;speech;microphone;whisper;
-Icon=io.voicestream.VoiceStream
+Icon=ai.nexiant.voicestream
 Exec=voicestream
 Terminal=false
 StartupNotify=true

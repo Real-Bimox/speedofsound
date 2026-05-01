@@ -78,15 +78,15 @@ val jpackageCommonArgs = listOf(
     "--name", "voicestream",
     "--description", "Voice typing for the Linux desktop",
     "--app-version", appVersion.substringBefore("-"),
-    "--vendor", "VoiceStream",
-    "--copyright", "Copyright 2026 Antonio Zugaldia",
+    "--vendor", "Nexiant",
+    "--copyright", "Copyright 2026 Nexiant",
     "--icon", rootProject.file("assets/logo/logo-square-512.png").absolutePath,
 )
 
 // These flags are only valid for installer package types (deb, rpm), not app-image
 val jpackageLinuxInstallerArgs = listOf(
     "--license-file", rootProject.file("LICENSE").absolutePath,
-    "--about-url", "https://www.voicestream.io",
+    "--about-url", "https://nexiant.ai",
     "--linux-app-category", "Utility",
     "--linux-menu-group", "Utility",
     "--linux-shortcut",

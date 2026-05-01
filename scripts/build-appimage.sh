@@ -25,11 +25,11 @@ ln -sf bin/voicestream "$APP_DIR/AppRun"
 # Desktop file under usr/share/applications (for appstreamcli and FHS convention),
 # symlinked to the AppDir root (required by the AppImage spec)
 mkdir -p "$APP_DIR/usr/share/applications"
-cat > "$APP_DIR/usr/share/applications/io.voicestream.VoiceStream.desktop" << 'DESKTOP'
+cat > "$APP_DIR/usr/share/applications/ai.nexiant.voicestream.desktop" << 'DESKTOP'
 [Desktop Entry]
 Version=1.0
 Type=Application
-Name=VoiceStream
+Name=Nexiant Voice
 Comment=Voice typing for the Linux desktop
 Categories=Utility;Accessibility;
 Keywords=voice;typing;dictation;transcription;speech;microphone;whisper;
@@ -38,8 +38,8 @@ Exec=voicestream
 Terminal=false
 StartupNotify=true
 DESKTOP
-ln -sf usr/share/applications/io.voicestream.VoiceStream.desktop \
-    "$APP_DIR/io.voicestream.VoiceStream.desktop"
+ln -sf usr/share/applications/ai.nexiant.voicestream.desktop \
+    "$APP_DIR/ai.nexiant.voicestream.desktop"
 
 # Icon at root (appimagetool requires it here, matching Icon= above)
 ln -sf lib/voicestream.png "$APP_DIR/voicestream.png"
@@ -49,8 +49,8 @@ ln -sf lib/voicestream.png "$APP_DIR/.DirIcon"
 
 # AppStream metadata
 mkdir -p "$APP_DIR/usr/share/metainfo"
-cp "$ROOT_DIR/data/io.voicestream.VoiceStream.metainfo.xml.in" \
-    "$APP_DIR/usr/share/metainfo/io.voicestream.VoiceStream.appdata.xml"
+cp "$ROOT_DIR/data/ai.nexiant.voicestream.metainfo.xml.in" \
+    "$APP_DIR/usr/share/metainfo/ai.nexiant.voicestream.appdata.xml"
 
 # GPU vs CPU is signaled by the caller via VOICESTREAM_GPU=1 (the Gradle build
 # already picked the GPU Sherpa JAR via -Pvoicestream.gpu=true; this just adjusts

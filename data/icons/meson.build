@@ -1,4 +1,4 @@
-application_id = 'io.voicestream.VoiceStream'
+application_id = 'ai.nexiant.voicestream'
 
 scalable_dir = 'hicolor' / 'scalable' / 'apps'
 install_data(

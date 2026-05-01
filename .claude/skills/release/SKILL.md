@@ -1,12 +1,12 @@
 ---
 name: release
-description: Create a new Speed of Sound app release.
+description: Create a new Nexiant Voice app release.
 argument-hint: <version> (e.g. 0.7.0)
 disable-model-invocation: true
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash(git *), Bash(gh *)
 ---
 
-Create a new release for Speed of Sound version $ARGUMENTS.
+Create a new release for Nexiant Voice version $ARGUMENTS.
 
 Release channels:
 - **alpha** (e.g. `1.2.3-alpha.1`): GitHub pre-release only.

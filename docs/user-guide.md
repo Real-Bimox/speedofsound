@@ -6,7 +6,7 @@
 ![Main screen](assets/screenshots/main-dark.png#only-dark)
 
 The main screen is divided into two halves. The top half contains a progress bar that reacts to your voice while you
-speak and shows transcription progress as Speed of Sound processes your audio. If you have an LLM text model
+speak and shows transcription progress as Nexiant Voice processes your audio. If you have an LLM text model
 configured, the progress bar will also reflect the polishing step.
 
 The bottom half displays the currently selected voice model, text model, and expected input language. The gear button
@@ -17,7 +17,7 @@ opens a menu where you can access Preferences, Keyboard Shortcuts, the About scr
 
 ## System Tray
 
-Speed of Sound includes a system tray icon on desktops that support it, such as KDE Plasma and XFCE. This uses the
+Nexiant Voice includes a system tray icon on desktops that support it, such as KDE Plasma and XFCE. This uses the
 standard [FreeDesktop specification](https://www.freedesktop.org/wiki/Specifications/StatusNotifierItem/),
 so it works with any compatible desktop. Left-clicking the icon opens the main window, right-clicking shows a context
 menu with options to start or stop listening, open the app, or quit.
@@ -34,7 +34,7 @@ primary access point.
 
 ## Keyboard shortcuts
 
-Most shortcuts are only active when the Speed of Sound main window is open and focused. The exception is `Super+Z`
+Most shortcuts are only active when the Nexiant Voice main window is open and focused. The exception is `Super+Z`
 (configurable, and shown below as an example), which is the global shortcut you will use day-to-day to start and stop
 dictation from any application.
 
@@ -56,7 +56,7 @@ A quick reference is also available from within the application. Tap the gear ic
 
 ## Preferences
 
-The Preferences dialog gives you control over how Speed of Sound behaves, from language selection and model
+The Preferences dialog gives you control over how Nexiant Voice behaves, from language selection and model
 configuration to personalization and backup.
 
 ![Preferences](assets/screenshots/preferences-light.png#only-light)
@@ -84,7 +84,7 @@ language and switch between the two using the `Left Shift` and `Right Shift` key
 **App Behavior** — Configure the general application flow:
 
 - Enable **Stay hidden on activation** to launch the app without showing the main window. This is useful when adding
-Speed of Sound to your system's startup applications, the app will be ready in the background immediately, and you
+Nexiant Voice to your system's startup applications, the app will be ready in the background immediately, and you
 can begin dictating using the shortcut without any window appearing first.
 
 - Enable **Record in background** to keep the main window hidden during recordings. In this case, the pipeline runs
@@ -104,19 +104,19 @@ Keep this window open while a download is in progress.
 
 ### Cloud Credentials
 
-Store API keys for cloud services. Speed of Sound supports Anthropic, Google, and OpenAI directly, as well as any
+Store API keys for cloud services. Nexiant Voice supports Anthropic, Google, and OpenAI directly, as well as any
 third-party provider that offers compatible endpoints, such as OpenRouter. Credentials saved here can be referenced
 when configuring voice or text model providers.
 
 !!! note "Cloud providers are optional"
-    Using cloud providers is entirely optional and not required to use Speed of Sound.
+    Using cloud providers is entirely optional and not required to use Nexiant Voice.
     This feature is intended for devices with limited hardware resources that cannot run models locally,
     or for cases where a large cloud-only model is needed to meet specific accuracy or latency requirements.
     See the [FAQ](faq.md) for more information.
 
 ### Voice Models
 
-Configure the speech recognition provider used to transcribe your audio. By default, Speed of Sound transcribes
+Configure the speech recognition provider used to transcribe your audio. By default, Nexiant Voice transcribes
 locally using an on-device model (Whisper by default). Multiple model families are available, including
 Whisper, Parakeet, and Canary. You can also add cloud-based providers and select which one is active.
 
@@ -138,4 +138,4 @@ normally need to be changed.
 
 ### Import / Export
 
-Back up your preferences to a file, useful to set up Speed of Sound on a different machine.
+Back up your preferences to a file, useful to set up Nexiant Voice on a different machine.
