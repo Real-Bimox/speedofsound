@@ -83,7 +83,24 @@ distrobox enter "$NAME" -- bash -c "
     git lfs pull
 "
 
-# 5. Verify
+# 5. Install appimagetool (used by 'make appimage' for distribution builds).
+#    It's a single AppImage binary; drop into ~/.local/bin which is on PATH.
+echo "[info] Ensuring appimagetool is on PATH inside the distrobox ..."
+distrobox enter "$NAME" -- bash -c "
+    set -e
+    if ! command -v appimagetool >/dev/null 2>&1; then
+        mkdir -p ~/.local/bin
+        curl -fL --progress-bar \
+            -o ~/.local/bin/appimagetool \
+            https://github.com/AppImage/appimagetool/releases/download/continuous/appimagetool-x86_64.AppImage
+        chmod +x ~/.local/bin/appimagetool
+        echo '[info] Installed appimagetool to ~/.local/bin/appimagetool'
+    else
+        echo '[info] appimagetool already present'
+    fi
+"
+
+# 6. Verify
 echo
 echo "[info] Verifying toolchain ..."
 distrobox enter "$NAME" -- bash -lc 'java -version 2>&1 | head -1'

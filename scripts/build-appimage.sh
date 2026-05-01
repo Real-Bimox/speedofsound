@@ -52,7 +52,17 @@ mkdir -p "$APP_DIR/usr/share/metainfo"
 cp "$ROOT_DIR/data/io.voicestream.VoiceStream.metainfo.xml.in" \
     "$APP_DIR/usr/share/metainfo/io.voicestream.VoiceStream.appdata.xml"
 
-# Build the AppImage, APPIMAGE_EXTRACT_AND_RUN=1 avoids a FUSE dependency
-OUTPUT="$OUTPUT_DIR/voicestream-${VERSION}-${ARCH}.AppImage"
+# GPU vs CPU is signaled by the caller via VOICESTREAM_GPU=1 (the Gradle build
+# already picked the GPU Sherpa JAR via -Pvoicestream.gpu=true; this just adjusts
+# the output filename). Sherpa's GPU build expects host-supplied CUDA 12 +
+# cuDNN 9 in LD_LIBRARY_PATH at runtime — we don't bundle those because they
+# would push the AppImage past 1 GB and conflict with the user's own CUDA.
+GPU_SUFFIX=""
+if [ "${VOICESTREAM_GPU:-0}" = "1" ]; then
+    GPU_SUFFIX="-gpu"
+fi
+
+# Build the AppImage. APPIMAGE_EXTRACT_AND_RUN=1 avoids a FUSE dependency.
+OUTPUT="$OUTPUT_DIR/voicestream-${VERSION}${GPU_SUFFIX}-${ARCH}.AppImage"
 APPIMAGE_EXTRACT_AND_RUN=1 appimagetool "$APP_DIR" "$OUTPUT"
 echo "AppImage created: $OUTPUT"

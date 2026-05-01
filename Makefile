@@ -138,6 +138,18 @@ jpackage-app-image:
 appimage: jpackage-app-image
 	./scripts/build-appimage.sh
 
+# GPU AppImage. Builds the GPU Sherpa JAR first if missing, then re-runs jpackage
+# with -Pvoicestream.gpu=true so the GPU JAR is bundled. Output filename gets a
+# -gpu suffix. Requires CUDA 12 + cuDNN 9 on the target host at runtime.
+appimage-gpu:
+	@if [ ! -f core/libs/sherpa-onnx-native-lib-linux-x64-gpu-v1.12.33.jar ]; then \
+		echo "GPU JAR missing; running build-gpu-jar.sh first..."; \
+		bash scripts/build-gpu-jar.sh; \
+	fi
+	rm -rf app/build/jpackage
+	./gradlew -Pvoicestream.gpu=true :app:jpackage-app-image --no-configuration-cache
+	VOICESTREAM_GPU=1 ./scripts/build-appimage.sh
+
 
 #
 # Docs
