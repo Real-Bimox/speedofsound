@@ -49,6 +49,12 @@ class SileroVadModelsTest {
     }
 
     @Test
+    fun `default VAD model uses VadProvider SILERO`() {
+        val model = SUPPORTED_VAD_MODELS.getValue(DEFAULT_VAD_MODEL_ID)
+        assertEquals(VadProvider.SILERO, model.provider)
+    }
+
+    @Test
     fun `VoiceModelFile defaults to TAR_BZ2 so existing tar bz2 models keep working`() {
         assertEquals(ArchiveFormat.TAR_BZ2, VoiceModelFile(name = "x").format)
     }

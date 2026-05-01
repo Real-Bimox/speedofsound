@@ -213,10 +213,15 @@ class SettingsClient(val settingsStore: SettingsStore) {
             .filter { modelManager.isModelDownloaded(it.id) }
             .sortedBy { it.dataSizeMegabytes }
             .map { voiceModel ->
+                val asrProvider = voiceModel.provider as? AsrProvider
+                    ?: error(
+                        "SUPPORTED_LOCAL_ASR_MODELS contained a non-ASR provider " +
+                            "(${voiceModel.provider::class.simpleName}) for model ${voiceModel.id}"
+                    )
                 VoiceModelProviderSetting(
                     id = voiceModel.id,
                     name = voiceModel.name,
-                    provider = voiceModel.provider,
+                    provider = asrProvider,
                     modelId = voiceModel.id,
                 )
             }

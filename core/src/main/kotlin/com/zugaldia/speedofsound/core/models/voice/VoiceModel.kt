@@ -2,7 +2,7 @@ package com.zugaldia.speedofsound.core.models.voice
 
 import com.zugaldia.speedofsound.core.Language
 import com.zugaldia.speedofsound.core.models.SelectableModel
-import com.zugaldia.speedofsound.core.plugins.asr.AsrProvider
+import com.zugaldia.speedofsound.core.plugins.SelectableProvider
 
 /**
  * Packaging format of the downloadable archive at [VoiceModelFile.url].
@@ -24,7 +24,7 @@ data class VoiceModelFile(
 data class VoiceModel(
     override val id: String,
     override val name: String, // User-friendly name
-    val provider: AsrProvider,
+    val provider: SelectableProvider,
     val languages: List<Language> = emptyList(), // Only if language restrictions apply, empty for multilingual models
     val dataSizeMegabytes: Long = 0L, // Model files uncompressed (not the archive file download), 0 for cloud models
     val archiveFile: VoiceModelFile? = null,
