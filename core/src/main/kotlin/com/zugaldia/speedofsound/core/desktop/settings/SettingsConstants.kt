@@ -92,7 +92,7 @@ const val KEY_VAD_ENDPOINTING = "vad-endpointing"
 const val DEFAULT_VAD_ENDPOINTING = true
 
 const val KEY_VAD_MIN_SILENCE_MS = "vad-min-silence-ms"
-const val DEFAULT_VAD_MIN_SILENCE_MS = 600
+const val DEFAULT_VAD_MIN_SILENCE_MS = 1500
 
 const val KEY_COMPUTE_PROVIDER = "compute-provider"
 // Note: the enum-typed default DEFAULT_COMPUTE_PROVIDER lives in AsrPluginOptions.kt.

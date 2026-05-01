@@ -81,8 +81,8 @@ class VoiceModelsPage(private val viewModel: PreferencesViewModel) : Preferences
 
     private fun addEndpointingGroup() {
         val silenceSwitchRow = SwitchRow().apply {
-            title = "Auto-stop on silence"
-            subtitle = "End the utterance when silence is detected."
+            title = "Auto-stop when you pause"
+            subtitle = "Stops recording when you stop speaking. Turn off to use the Stop button only."
             active = viewModel.getVadEndpointing()
         }
 
@@ -91,8 +91,8 @@ class VoiceModelsPage(private val viewModel: PreferencesViewModel) : Preferences
             VAD_SILENCE_MAX,
             VAD_SILENCE_STEP
         ).apply {
-            title = "Silence threshold (ms)"
-            subtitle = "Lower values feel more responsive but cut speech sooner."
+            title = "Pause length before auto-stop (ms)"
+            subtitle = "How long a pause must be before recording stops. 1500 ms = 1.5 seconds. Range: 200–2000 ms."
             digits = 0
             value = viewModel.getVadMinSilenceMs().toDouble()
             sensitive = silenceSwitchRow.active
@@ -107,7 +107,7 @@ class VoiceModelsPage(private val viewModel: PreferencesViewModel) : Preferences
         }
 
         val group = PreferencesGroup().apply {
-            title = "Endpointing"
+            title = "Auto-stop"
             description = "Automatically end recording when you stop speaking."
             add(silenceSwitchRow)
             add(silenceSpinRow)

@@ -133,7 +133,7 @@
     </key>
     <key name="vad-min-silence-ms" type="i">
       <range min="200" max="2000"/>
-      <default>600</default>
+      <default>1500</default>
       <summary>Silence duration before VAD ends an utterance (ms)</summary>
       <description>Lower values feel more responsive but cut speech sooner.</description>
     </key>

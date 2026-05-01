@@ -34,8 +34,8 @@ class SettingsClientVadTest {
     }
 
     @Test
-    fun `vad min silence default is 600`() {
-        assertEquals(600, client.getVadMinSilenceMs())
+    fun `vad min silence default is 1500`() {
+        assertEquals(1500, client.getVadMinSilenceMs())
     }
 
     @Test
