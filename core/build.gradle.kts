@@ -21,7 +21,28 @@ dependencies {
     // Sherpa is not published to Maven Central, we need to add the libraries manually.
     // https://k2-fsa.github.io/sherpa/onnx/java-api/non-android-java.html
     api(files("libs/sherpa-onnx-v1.12.33.jar"))
-    api(files("libs/sherpa-onnx-native-lib-linux-x64-v1.12.33.jar"))
+    // Linux x64: pick GPU-aware native libs when -Pvoicestream.gpu=true is passed; CPU otherwise.
+    // The GPU JAR is produced by scripts/build-gpu-jar.sh and is gitignored — see RESUME.md.
+    api(
+        files(
+            run {
+                val useGpu = (project.findProperty("voicestream.gpu") as? String)?.toBoolean() == true
+                val cpuJar = file("libs/sherpa-onnx-native-lib-linux-x64-v1.12.33.jar")
+                val gpuJar = file("libs/sherpa-onnx-native-lib-linux-x64-gpu-v1.12.33.jar")
+                val chosen = if (useGpu) gpuJar else cpuJar
+                require(chosen.exists()) {
+                    if (useGpu) {
+                        "GPU build requested but ${gpuJar.name} not found. " +
+                            "Run 'make -C core/libs download-gpu-libs' first."
+                    } else {
+                        "Missing CPU native lib JAR ${cpuJar.name}. " +
+                            "Run 'make -C core/libs download-libs'."
+                    }
+                }
+                chosen
+            }
+        )
+    )
     api(files("libs/sherpa-onnx-native-lib-linux-aarch64-v1.12.33.jar"))
 
     implementation(libs.anthropic)

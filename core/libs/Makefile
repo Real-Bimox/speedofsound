@@ -23,3 +23,7 @@ download-libs:
 	@echo "$(CHECKSUM_AARCH64)  sherpa-onnx-native-lib-linux-aarch64-$(VERSION).jar" | sha256sum -c -
 	@echo "$(CHECKSUM_X64)  sherpa-onnx-native-lib-linux-x64-$(VERSION).jar" | sha256sum -c -
 	@echo "All checksums verified."
+
+download-gpu-libs:
+	@echo "Building Sherpa GPU JAR + staging CUDA runtime libs..."
+	../../scripts/build-gpu-jar.sh

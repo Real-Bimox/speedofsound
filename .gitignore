@@ -57,3 +57,6 @@ voicestream_*.snap
 
 ### MkDocs ###
 site/
+
+# GPU-only Sherpa artifact (built locally via scripts/build-gpu-jar.sh; ~400 MB)
+core/libs/sherpa-onnx-native-lib-linux-x64-gpu-*.jar
