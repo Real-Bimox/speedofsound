@@ -1,6 +1,6 @@
 # Nexiant Voice — Session Resume Guide
 
-**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.16.0`. **Last verified working commit:** TBD on next push (v0.16.0: full rebrand to Nexiant Voice; App-ID changed `io.voicestream.VoiceStream` → `ai.nexiant.voicestream`; URLs all point at `https://nexiant.ai`; logo replaced with the Nexiant family icon; `:core:check :cli:check :app:compileKotlin :app:detekt` green; CPU AppImage builds via `make appimage`).
+**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.16.0`. **Last verified working commit:** `f850a86` (v0.16.0: full rebrand to Nexiant Voice; App-ID changed `io.voicestream.VoiceStream` → `ai.nexiant.voicestream`; URLs all point at `https://nexiant.ai`; logo replaced with the Nexiant family icon; `:core:check :cli:check :app:compileKotlin :app:detekt` green; CPU AppImage builds via `make appimage`).
 
 > **Rebrand notes:** The display name is **Nexiant Voice**. The internal project identifier is **voicestream** (binary name, distrobox name, AppImage filename, repo path — kept stable). The Java source package `com.zugaldia.speedofsound.*` is preserved unchanged so future upstream merges still work cleanly. After upgrading to v0.16.0 from any earlier version, GSettings stored under the old `io.voicestream.VoiceStream` schema are abandoned (the new schema is `ai.nexiant.voicestream`); reconfigure on first launch.
 
