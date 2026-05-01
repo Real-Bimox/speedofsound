@@ -51,7 +51,10 @@ class MainWindow(
     // Track whether we should hide the window on pipeline completion
     // Normally, we should unless we're opening a sub-window (e.g., preferences, or shortcuts)
     // A better way is likely to prevent the pipeline to trigger to start with.
-    private var shouldHideOnCompletion = true
+    // Default false: window stays visible after each transcription. Easier for in-place
+    // testing/demos. Power users who voice-type into other apps can flip this back via
+    // a future Voice-prefs toggle.
+    private var shouldHideOnCompletion = false
 
     init {
         application = app
@@ -158,7 +161,7 @@ class MainWindow(
 
         viewModel.state.connect(SIGNAL_PIPELINE_COMPLETED, MainState.PipelineCompleted {
             if (shouldHideOnCompletion) { goAway() }
-            shouldHideOnCompletion = true // Reset flag for next pipeline
+            shouldHideOnCompletion = false // Stay visible by default; sub-windows toggle as needed
         })
 
         viewModel.state.connect(SIGNAL_LANGUAGE_CHANGED, MainState.LanguageChanged { languageName: String ->

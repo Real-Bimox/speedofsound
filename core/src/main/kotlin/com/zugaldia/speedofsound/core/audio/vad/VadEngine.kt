@@ -30,6 +30,7 @@ class VadEngine(
             .setThreshold(options.threshold)
             .setMinSilenceDuration(options.minSilenceMs / MS_PER_SECOND)
             .setMinSpeechDuration(options.minSpeechMs / MS_PER_SECOND)
+            .setMaxSpeechDuration(options.maxSpeechMs / MS_PER_SECOND)
             .build()
         val vadConfig = VadModelConfig.builder()
             .setSileroVadModelConfig(sileroConfig)

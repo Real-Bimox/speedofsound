@@ -14,6 +14,9 @@ import java.nio.file.Path
  *                     feels more responsive but cuts speech sooner.
  * @param minSpeechMs Minimum speech duration before VAD declares start-of-utterance.
  *                    Filters out short clicks and microphone noise.
+ * @param maxSpeechMs Hard cap on a single utterance before Sherpa force-flushes it,
+ *                    in milliseconds. Default 15s — long enough for a multi-sentence
+ *                    thought; Sherpa's own default of 5s cut speech mid-clause.
  * @param sampleRate PCM sample rate in Hz. Silero VAD requires 16000 (or 8000).
  */
 data class VadOptions(
@@ -21,6 +24,7 @@ data class VadOptions(
     val threshold: Float = 0.5f,
     val minSilenceMs: Int = 600,
     val minSpeechMs: Int = 250,
+    val maxSpeechMs: Int = 15_000,
     val sampleRate: Int = SAMPLE_RATE_16K,
 ) {
     init {
@@ -32,6 +36,9 @@ data class VadOptions(
         }
         require(minSilenceMs > 0) { "minSilenceMs must be > 0; got $minSilenceMs" }
         require(minSpeechMs > 0) { "minSpeechMs must be > 0; got $minSpeechMs" }
+        require(maxSpeechMs >= minSpeechMs) {
+            "maxSpeechMs ($maxSpeechMs) must be >= minSpeechMs ($minSpeechMs)"
+        }
     }
 
     companion object {

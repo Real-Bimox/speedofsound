@@ -76,7 +76,7 @@ const val KEY_POST_HIDE_DELAY_MS = "post-hide-delay-ms"
 const val DEFAULT_POST_HIDE_DELAY_MS = 100
 
 const val KEY_TYPING_DELAY_MS = "typing-delay-ms"
-const val DEFAULT_TYPING_DELAY_MS = 50
+const val DEFAULT_TYPING_DELAY_MS = 20
 
 // Personalization page
 
