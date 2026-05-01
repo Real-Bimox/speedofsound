@@ -15,8 +15,10 @@ import java.nio.file.Path
  * @param minSpeechMs Minimum speech duration before VAD declares start-of-utterance.
  *                    Filters out short clicks and microphone noise.
  * @param maxSpeechMs Hard cap on a single utterance before Sherpa force-flushes it,
- *                    in milliseconds. Default 15s — long enough for a multi-sentence
- *                    thought; Sherpa's own default of 5s cut speech mid-clause.
+ *                    in milliseconds. Default 30s — matches Sherpa Whisper's hard
+ *                    30-second per-chunk limit (longer audio is silently truncated
+ *                    by the recognizer). Sherpa's own default of 5s cut speech
+ *                    mid-clause; 15s still felt short for full thoughts.
  * @param sampleRate PCM sample rate in Hz. Silero VAD requires 16000 (or 8000).
  */
 data class VadOptions(
@@ -24,7 +26,7 @@ data class VadOptions(
     val threshold: Float = 0.5f,
     val minSilenceMs: Int = 600,
     val minSpeechMs: Int = 250,
-    val maxSpeechMs: Int = 15_000,
+    val maxSpeechMs: Int = 30_000,
     val sampleRate: Int = SAMPLE_RATE_16K,
 ) {
     init {
