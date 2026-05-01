@@ -21,25 +21,15 @@ fun buildAboutDialog(): AboutDialog {
     }
 
     dialog.applicationName = APPLICATION_NAME
-    dialog.developerName = "Antonio Zugaldia"
+    dialog.developerName = "Nexiant"
     dialog.version = "v${BuildConfig.VERSION} (${runtimeEnvironment.label})"
     dialog.website = APPLICATION_URL
-    dialog.issueUrl = "https://github.com/zugaldia/voicestream/issues"
-    dialog.supportUrl = "https://github.com/zugaldia/voicestream/issues"
+    dialog.issueUrl = APPLICATION_URL
+    dialog.supportUrl = APPLICATION_URL
     dialog.licenseType = License.MIT_X11
-    dialog.copyright = "Copyright (c) 2025-2026 Antonio Zugaldia"
+    dialog.copyright = "Copyright (c) 2026 Nexiant"
     dialog.debugInfo = buildDebugInfo()
     dialog.debugInfoFilename = "$APPLICATION_SHORT-debug.txt"
-    dialog.addLink("Sponsor", "https://github.com/sponsors/zugaldia")
-    dialog.addAcknowledgementSection(
-        "Built on the Shoulders of Giants",
-        arrayOf(
-            "The Java-GI team https://codeberg.org/java-gi/java-gi",
-            "The Sherpa ONNX team https://github.com/k2-fsa/sherpa-onnx",
-            "The Whisper team https://github.com/openai/whisper",
-            "The dbus-java team https://github.com/hypfvieh/dbus-java",
-        )
-    )
 
     return dialog
 }

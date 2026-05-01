@@ -94,7 +94,7 @@ class SosApplication(applicationId: String, flags: Set<ApplicationFlags>) : Appl
                 // Keep the app alive without a visible window. GApplication auto-quits
                 // when its use-count drops to zero (no visible windows), hold() prevents
                 // that until the user triggers the global shortcut for the first time.
-                // https://github.com/zugaldia/voicestream/issues/141
+                // (Tracked internally — Nexiant Voice issue #141: hidden-start hold/release.)
                 hold()
                 isHoldingForHiddenStart = true
             }

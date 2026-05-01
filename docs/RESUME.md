@@ -10,7 +10,7 @@ This document captures everything needed to pick up VoiceStream development afte
 
 ## 1 — What this fork is
 
-- **Forked from:** [zugaldia/speedofsound](https://github.com/zugaldia/speedofsound) at commit `0b26a64` (v0.13.0 + Gradle 9.4.1 upgrade)
+- **Origin:** Forked from upstream at commit `0b26a64` (v0.13.0 + Gradle 9.4.1 upgrade); upstream URL intentionally not retained — see Rebrand notes above.
 - **Display name:** VoiceStream
 - **Application ID:** `io.voicestream.VoiceStream`
 - **Source package:** `com.zugaldia.speedofsound.*` — **intentionally preserved** so future upstream merges work cleanly

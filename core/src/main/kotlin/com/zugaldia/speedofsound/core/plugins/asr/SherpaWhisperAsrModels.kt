@@ -6,24 +6,9 @@ import com.zugaldia.speedofsound.core.models.voice.VoiceModel
 import com.zugaldia.speedofsound.core.models.voice.VoiceModelFile
 
 val SUPPORTED_SHERPA_WHISPER_ASR_MODELS = mapOf(
+    // Bundled with the AppImage — see core/src/main/resources/models/asr/.
     DEFAULT_ASR_SHERPA_WHISPER_MODEL_ID to VoiceModel(
         id = DEFAULT_ASR_SHERPA_WHISPER_MODEL_ID,
-        name = "Whisper Tiny",
-        provider = AsrProvider.SHERPA_WHISPER,
-        dataSizeMegabytes = 99L,
-        archiveFile = VoiceModelFile(
-            name = "sherpa-onnx-whisper-tiny",
-            url = "$SHERPA_ONNX_ASR_MODELS_URL/sherpa-onnx-whisper-tiny.tar.bz2",
-            sha256sum = "c46116994e539aa165266d96b325252728429c12535eb9d8b6a2b10f129e66b1"
-        ),
-        components = listOf(
-            VoiceModelFile(name = "tiny-encoder.int8.onnx"),
-            VoiceModelFile(name = "tiny-decoder.int8.onnx"),
-            VoiceModelFile(name = "tiny-tokens.txt")
-        )
-    ),
-    "sherpa-onnx-whisper-tiny.en" to VoiceModel(
-        id = "sherpa-onnx-whisper-tiny.en",
         name = "Whisper Tiny (English only)",
         provider = AsrProvider.SHERPA_WHISPER,
         languages = listOf(Language.ENGLISH),
@@ -37,6 +22,22 @@ val SUPPORTED_SHERPA_WHISPER_ASR_MODELS = mapOf(
             VoiceModelFile(name = "tiny.en-encoder.int8.onnx"),
             VoiceModelFile(name = "tiny.en-decoder.int8.onnx"),
             VoiceModelFile(name = "tiny.en-tokens.txt")
+        )
+    ),
+    "sherpa-onnx-whisper-tiny" to VoiceModel(
+        id = "sherpa-onnx-whisper-tiny",
+        name = "Whisper Tiny (multilingual)",
+        provider = AsrProvider.SHERPA_WHISPER,
+        dataSizeMegabytes = 99L,
+        archiveFile = VoiceModelFile(
+            name = "sherpa-onnx-whisper-tiny",
+            url = "$SHERPA_ONNX_ASR_MODELS_URL/sherpa-onnx-whisper-tiny.tar.bz2",
+            sha256sum = "c46116994e539aa165266d96b325252728429c12535eb9d8b6a2b10f129e66b1"
+        ),
+        components = listOf(
+            VoiceModelFile(name = "tiny-encoder.int8.onnx"),
+            VoiceModelFile(name = "tiny-decoder.int8.onnx"),
+            VoiceModelFile(name = "tiny-tokens.txt")
         )
     ),
     "sherpa-onnx-whisper-base" to VoiceModel(

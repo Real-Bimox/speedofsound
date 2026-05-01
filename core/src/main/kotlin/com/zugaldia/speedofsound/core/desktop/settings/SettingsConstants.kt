@@ -70,13 +70,13 @@ const val DEFAULT_SELECTED_TEXT_MODEL_PROVIDER_ID = ""
 // Advanced page
 
 const val KEY_SANITIZE_SPECIAL_CHARS = "sanitize-special-chars"
-const val DEFAULT_SANITIZE_SPECIAL_CHARS = false
+const val DEFAULT_SANITIZE_SPECIAL_CHARS = true
 
 const val KEY_POST_HIDE_DELAY_MS = "post-hide-delay-ms"
 const val DEFAULT_POST_HIDE_DELAY_MS = 100
 
 const val KEY_TYPING_DELAY_MS = "typing-delay-ms"
-const val DEFAULT_TYPING_DELAY_MS = 10
+const val DEFAULT_TYPING_DELAY_MS = 50
 
 // Personalization page
 

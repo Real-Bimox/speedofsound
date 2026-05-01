@@ -105,7 +105,7 @@ listOf("deb", "rpm", "app-image").forEach { packageType ->
                 addAll(jpackageLinuxInstallerArgs)
             }
             if (packageType == "deb") {
-                add("--linux-deb-maintainer"); add("antonio@zugaldia.com")
+                add("--linux-deb-maintainer"); add("nexiant@nexiant.ai")
             }
             add("--type"); add(packageType)
         })

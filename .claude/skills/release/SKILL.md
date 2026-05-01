@@ -53,7 +53,7 @@ To build the release notes:
 The entry must follow this exact format (see existing entries for reference):
 ```xml
 <release version="RELEASE_VERSION" date="YYYY-MM-DD">
-    <url type="details">https://github.com/zugaldia/speedofsound/releases/tag/vRELEASE_VERSION</url>
+    <url type="details">https://nexiant.ai/releases/vRELEASE_VERSION</url>
     <description>
         <p>
             User-facing summary here.
@@ -97,8 +97,8 @@ publish the releases. If the version contains `alpha` or `beta`, the GitHub rele
 pre-release.
 
 Remind the user to:
-1. Monitor the workflows at: https://github.com/zugaldia/speedofsound/actions
-2. Verify the release at: https://github.com/zugaldia/speedofsound/releases
+1. Monitor the workflows at: https://nexiant.ai
+2. Verify the release at: https://nexiant.ai/releases
 
 ## Error recovery
 

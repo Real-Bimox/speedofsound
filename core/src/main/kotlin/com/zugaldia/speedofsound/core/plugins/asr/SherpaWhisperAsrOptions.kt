@@ -4,7 +4,7 @@ import com.zugaldia.speedofsound.core.Language
 import com.zugaldia.speedofsound.core.desktop.settings.DEFAULT_LANGUAGE
 
 // Bundled with the JAR under core/src/main/resources/models/asr
-const val DEFAULT_ASR_SHERPA_WHISPER_MODEL_ID = "sherpa-onnx-whisper-tiny"
+const val DEFAULT_ASR_SHERPA_WHISPER_MODEL_ID = "sherpa-onnx-whisper-tiny.en"
 
 /**
  * Options for configuring the Sherpa Whisper ASR plugin.
