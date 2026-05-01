@@ -1,8 +1,21 @@
 # Nexiant Voice — Session Resume Guide
 
-**Last updated:** 2026-05-01. **Current branch:** `main`. **Current version:** `0.16.0`. **Last verified working commit:** `f850a86` (v0.16.0: full rebrand to Nexiant Voice; App-ID changed `io.voicestream.VoiceStream` → `ai.nexiant.voicestream`; URLs all point at `https://nexiant.ai`; logo replaced with the Nexiant family icon; `:core:check :cli:check :app:compileKotlin :app:detekt` green; CPU AppImage builds via `make appimage`).
+**Last updated:** 2026-05-01 (end of day). **Current branch:** `main`. **Current version:** `0.16.0`. **Last verified working commit:** `2638e57` (v0.16.0 rebrand + post-rebrand triage; `:core:check :cli:check :app:check :app:detekt` green; `make appimage` produces a working CPU AppImage at 203 MB; Test 1 partial — voice typing works end-to-end, VAD endpointing verified live; Tests 2 + 3 marked complete-by-implication / not-yet-run, see §6).
 
-> **Rebrand notes:** The display name is **Nexiant Voice**. The internal project identifier is **voicestream** (binary name, distrobox name, AppImage filename, repo path — kept stable). The Java source package `com.zugaldia.speedofsound.*` is preserved unchanged so future upstream merges still work cleanly. After upgrading to v0.16.0 from any earlier version, GSettings stored under the old `io.voicestream.VoiceStream` schema are abandoned (the new schema is `ai.nexiant.voicestream`); reconfigure on first launch.
+> **Rebrand notes:** The display name is **Nexiant Voice**. The internal project identifier is **voicestream** (binary name, distrobox name, AppImage filename, repo path — kept stable). The Java source package `com.zugaldia.speedofsound.*` is preserved unchanged so future upstream merges still work cleanly. After upgrading to v0.16.0 from any earlier version, the `LegacySchemaMigrator` runs once on first launch and copies any v0.15.0 GSettings entries from `/io/voicestream/VoiceStream/` to `/ai/nexiant/voicestream/`. The repository no longer ships a `LICENSE` file and is no longer MIT-distributed; metadata-license is `FSFAP` (the metainfo XML itself), project-license is `LicenseRef-proprietary`.
+
+> **Today's session (2026-05-01) summary** (commits `37233ea..2638e57`):
+> - Auto-migrate legacy v0.15.0 GSettings on first v0.16.0 launch (`37233ea`).
+> - Rebrand triage: switched bundled ASR model `Whisper Tiny multilingual` → `Whisper Tiny English` (`tiny.en-*` files, ~100 MB, identical AppImage size); scrubbed final personal/upstream refs (`AppAboutDialog`, `--linux-deb-maintainer`, `.github/FUNDING.yml`, two upstream-issue comment URLs, etc.) (`62306a1`).
+> - Removed `LICENSE` file entirely; updated jpackage build to skip the license-file flag; About dialog license-type → `License.UNKNOWN`; metainfo license fields adjusted for appstreamcli compatibility (`45ce250`).
+> - Test-1 regressions triaged: typing-delay default 10ms → 50ms then → 20ms (Shift-modifier race vs. perceived latency tradeoff), `sanitize-special-chars` default ON, `MainWindow.shouldHideOnCompletion` default flipped to `false` (window stays visible after each transcription for in-place testing), VAD `maxSpeechMs` cap added at 15s then bumped to 30s (matches Sherpa Whisper's hard 30-second per-chunk truncation point) (`8ef7fb4` then `2638e57`).
+> - VAD silence threshold default 600ms → 1500ms; clarified Voice-prefs labels (`Auto-stop` group, `Auto-stop when you pause`, `Pause length before auto-stop (ms)` with concrete unit hint) (`f2ebbff`).
+>
+> **What's still pending host-side:**
+> - The XDG-portal Shift-modifier off-by-one we observed at `typing-delay=10ms` (capital letters typed lowercase, `?` typed as `/`). 20ms partial mitigation was committed; not yet verified to be sufficient. If 20ms still races, the proper fix is in the Stargate keysym dispatcher (modifier press/release ordering), not a delay knob.
+> - Whisper Tiny English live transcription quality vs. previous multilingual (paragraph-length dictation feels accurate per smoke-test).
+> - Test 3 (GPU AppImage on this Lenovo P920 with CUDA 12 / cuDNN 9): never run today.
+> - User-facing Voice-prefs toggle to flip `MainWindow.shouldHideOnCompletion` back on (currently a code-default of `false`; needs a settings key + Pref switch). Power-user voice-typing-into-other-apps requires this.
 
 This document captures everything needed to pick up VoiceStream development after a context loss. Read this first; then drill into the spec/plan docs and `git log` for detail.
 
@@ -118,6 +131,16 @@ distrobox enter voicestream-dev -- bash -lc 'cd /var/home/bahram/local-repos/spe
 - Stale `assets/banners/{github,snapcraft}.png` (legacy upstream marketing rasters, never referenced) removed.
 - AppImage filename pattern: `voicestream-0.16.0-x86_64.AppImage` (binary name `voicestream` retained per project-identifier convention).
 - **GSettings auto-migration:** `LegacySchemaMigrator` runs on first launch, copies any v0.15.0 dconf entries from `/io/voicestream/VoiceStream/` to `/ai/nexiant/voicestream/` via `dconf dump | dconf load`. Gracefully no-ops when nothing to migrate, when the new schema already has data, or when `dconf` isn't installed. 5 unit tests in `LegacySchemaMigratorTest` cover the branching.
+- **License removed entirely**: no `LICENSE` file, no MIT distribution. About dialog reflects `License.UNKNOWN`, metainfo declares `LicenseRef-proprietary`. Internal `com.zugaldia.speedofsound.*` Java package preserved (architectural-only artifact, no user-facing impact).
+- **Bundled ASR model swapped**: Whisper Tiny multilingual → **Whisper Tiny English** (`tiny.en-encoder/decoder/tokens`). Default model ID: `sherpa-onnx-whisper-tiny.en`. Multilingual Tiny remains as an optional download in the Library, relabelled to disambiguate.
+- **Post-rebrand author/URL scrub** (final pass): `AppAboutDialog` developer/copyright/issue/support/sponsor block, `--linux-deb-maintainer` email, `.github/FUNDING.yml`, two upstream-issue comment URLs, `.claude/skills/release/SKILL.md` URLs, README Stargate dep credit link.
+- **Default knob tunings from Test 1 triage**:
+  - `typing-delay-ms` default 10 → 20 (mitigates the XDG-portal Shift-modifier off-by-one race; 50 felt too sluggish so we settled at 20).
+  - `sanitize-special-chars` default false → true (replaces non-ASCII chars with ASCII equivalents pre-typing).
+  - `vad-min-silence-ms` default 600 → 1500 (more breathing room for natural speech pauses).
+  - `VadOptions.maxSpeechMs` default added at 30s, threaded into Sherpa's `setMaxSpeechDuration` (matches Sherpa Whisper's hard 30-second per-chunk limit; previously Sherpa's own default of 5s cut speech mid-clause).
+  - `MainWindow.shouldHideOnCompletion` initial value true → false (keeps window visible after each transcription; for power-users typing into other apps this needs a Pref toggle — see Pending).
+- **Voice-prefs UI labels** clarified ("Auto-stop when you pause", "Pause length before auto-stop (ms)" with explicit "1500 ms = 1.5 seconds" hint).
 
 ### ✓ Closed in v0.15.0
 - VAD-15: dedicated `VadProvider` enum; `VoiceModel.provider` widened to `SelectableProvider` so VAD models stop borrowing `AsrProvider.SHERPA_WHISPER`.
